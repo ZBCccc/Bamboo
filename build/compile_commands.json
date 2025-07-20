@@ -1,0 +1,57 @@
+[
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-SERVER.dir/primitive.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/primitive.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/primitive.cpp"
+},
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-SERVER.dir/server/BambooServer.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/server/BambooServer.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/server/BambooServer.cpp"
+},
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-SERVER.dir/server/ServerStorage.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/server/ServerStorage.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/server/ServerStorage.cpp"
+},
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-SERVER.dir/server/SSEServer.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/server/SSEServer.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/server/SSEServer.cpp"
+},
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-SERVER.dir/server/RunSSEServer.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/server/RunSSEServer.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/server/RunSSEServer.cpp"
+},
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/primitive.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/primitive.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/primitive.cpp"
+},
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/client/BambooClient.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/client/BambooClient.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/client/BambooClient.cpp"
+},
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/client/ClientState.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/client/ClientState.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/client/ClientState.cpp"
+},
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/client/SSEClient.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/client/SSEClient.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/client/SSEClient.cpp"
+},
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/client/Benchmark.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/client/Benchmark.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/client/Benchmark.cpp"
+},
+{
+  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
+  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/client/RunSSEClient.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/client/RunSSEClient.cpp",
+  "file": "/home/chariel/Desktop/artifacts/Bamboo/client/RunSSEClient.cpp"
+}
+]

@@ -1,0 +1,263 @@
+Bamboo Search
+Start searching...
+Searching with Bamboo for keyword: fifty
+	Totally find 500000 records
+189198209.187000
+
+1229463375.674000
+
+Searching with Bamboo for keyword: fifty
+	Totally find 500000 records
+188877104.135000
+
+1255599097.958000
+
+Searching with Bamboo for keyword: fifty
+	Totally find 500000 records
+188592204.439000
+
+1243877988.816000
+
+Searching with Bamboo for keyword: onehundred
+	Totally find 1000000 records
+381776327.540000
+
+2433539700.518000
+
+Searching with Bamboo for keyword: onehundred
+	Totally find 1000000 records
+371528537.283000
+
+2500176043.115000
+
+Searching with Bamboo for keyword: onehundred
+	Totally find 1000000 records
+366081086.679000
+
+2459639047.340000
+
+
+
+
+
+
+
+
+
+delay=300ms
+
+
+Bamboo Search
+Start searching...
+Searching with Bamboo for keyword: one
+	Totally find 10000 records
+3781851.155000
+
+25198945.194000
+
+Searching with Bamboo for keyword: five
+	Totally find 50000 records
+19099847.197000
+
+123535128.623000
+
+Searching with Bamboo for keyword: ten
+	Totally find 100000 records
+38471067.198000
+
+249728361.323000
+
+Searching with Bamboo for keyword: fifteen
+	Totally find 150000 records
+57146454.447000
+
+369749512.378000
+
+Searching with Bamboo for keyword: twenty
+	Totally find 200000 records
+75996502.551000
+
+499904670.321000
+
+Searching with Bamboo for keyword: twentyfive
+	Totally find 250000 records
+94602808.019000
+
+625028996.494000
+
+Bamboo delete
+Start Deleting...
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.000000, deleted 0
+	Totally find 50000 records
+18976409.953000
+
+123949615.720000
+
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.100000, deleted 5000
+	Totally find 45000 records
+21080913.464000
+
+136332715.584000
+
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.200000, deleted 10000
+	Totally find 40000 records
+22754726.324000
+
+148102470.933000
+
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.300000, deleted 15000
+	Totally find 35000 records
+24640299.378000
+
+161545047.282000
+
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.400000, deleted 20000
+	Totally find 30000 records
+26748689.649000
+
+174484363.345000
+
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.500000, deleted 25000
+	Totally find 25000 records
+28555031.649000
+
+190860190.713000
+
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.600000, deleted 30000
+	Totally find 20000 records
+30395131.591000
+
+201717704.172000
+
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.700000, deleted 35000
+	Totally find 15000 records
+32426740.697000
+
+214978831.063000
+
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.800000, deleted 40000
+	Totally find 10000 records
+34368303.964000
+
+228099960.052000
+
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.900000, deleted 45000
+	Totally find 5000 records
+36240121.447000
+
+236019061.633000
+
+
+
+
+
+Bamboo Search
+Start searching...
+Searching with Bamboo for keyword: fifteen
+	Totally find 150000 records
+57636985.397000
+371095929.850000
+Searching with Bamboo for keyword: five
+	Totally find 50000 records
+18991377.809000
+124412709.430000
+Searching with Bamboo for keyword: one
+	Totally find 10000 records
+3799325.579000
+25665808.565000
+Searching with Bamboo for keyword: ten
+	Totally find 100000 records
+37781045.430000
+250199192.519000
+Searching with Bamboo for keyword: twenty
+	Totally find 200000 records
+75907939.317000
+498762473.450000
+Searching with Bamboo for keyword: twentyfive
+	Totally find 250000 records
+94481164.337000
+621574055.765000
+Bamboo delete
+Start Deleting...
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.000000, deleted 0
+	Totally find 50000 records
+19069480.519000
+125757582.981000
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.100000, deleted 5000
+	Totally find 45000 records
+20942873.049000
+134959989.268000
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.200000, deleted 10000
+	Totally find 40000 records
+22701281.346000
+147228504.067000
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.300000, deleted 15000
+	Totally find 35000 records
+24755873.311000
+160394233.898000
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.400000, deleted 20000
+	Totally find 30000 records
+26655030.757000
+170861799.724000
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.500000, deleted 25000
+	Totally find 25000 records
+28515827.639000
+181813588.430000
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.600000, deleted 30000
+	Totally find 20000 records
+30652415.217000
+203124204.713000
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.700000, deleted 35000
+	Totally find 15000 records
+32450171.812000
+210275320.943000
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.800000, deleted 40000
+	Totally find 10000 records
+34156856.470000
+223806115.411000
+prepared keyword five
+Searching with Deletion with Bamboo for keyword: five
+Delete portion: 0.900000, deleted 45000
+	Totally find 5000 records
+36228443.611000
+232127144.961000
+
+
+
+
