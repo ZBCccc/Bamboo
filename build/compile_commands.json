@@ -1,57 +1,68 @@
 [
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-SERVER.dir/primitive.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/primitive.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/primitive.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-CLIENT.dir/primitive.cpp.o -c /Users/cyan/code/C++/Bamboo/primitive.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/primitive.cpp",
+  "output": "CMakeFiles/Bamboo-CLIENT.dir/primitive.cpp.o"
 },
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-SERVER.dir/server/BambooServer.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/server/BambooServer.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/server/BambooServer.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-CLIENT.dir/client/BambooClient.cpp.o -c /Users/cyan/code/C++/Bamboo/client/BambooClient.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/client/BambooClient.cpp",
+  "output": "CMakeFiles/Bamboo-CLIENT.dir/client/BambooClient.cpp.o"
 },
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-SERVER.dir/server/ServerStorage.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/server/ServerStorage.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/server/ServerStorage.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-CLIENT.dir/client/ClientState.cpp.o -c /Users/cyan/code/C++/Bamboo/client/ClientState.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/client/ClientState.cpp",
+  "output": "CMakeFiles/Bamboo-CLIENT.dir/client/ClientState.cpp.o"
 },
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-SERVER.dir/server/SSEServer.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/server/SSEServer.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/server/SSEServer.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-CLIENT.dir/client/SSEClient.cpp.o -c /Users/cyan/code/C++/Bamboo/client/SSEClient.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/client/SSEClient.cpp",
+  "output": "CMakeFiles/Bamboo-CLIENT.dir/client/SSEClient.cpp.o"
 },
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-SERVER.dir/server/RunSSEServer.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/server/RunSSEServer.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/server/RunSSEServer.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-CLIENT.dir/client/Benchmark.cpp.o -c /Users/cyan/code/C++/Bamboo/client/Benchmark.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/client/Benchmark.cpp",
+  "output": "CMakeFiles/Bamboo-CLIENT.dir/client/Benchmark.cpp.o"
 },
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/primitive.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/primitive.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/primitive.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-CLIENT.dir/client/RunSSEClient.cpp.o -c /Users/cyan/code/C++/Bamboo/client/RunSSEClient.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/client/RunSSEClient.cpp",
+  "output": "CMakeFiles/Bamboo-CLIENT.dir/client/RunSSEClient.cpp.o"
 },
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/client/BambooClient.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/client/BambooClient.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/client/BambooClient.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-SERVER.dir/primitive.cpp.o -c /Users/cyan/code/C++/Bamboo/primitive.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/primitive.cpp",
+  "output": "CMakeFiles/Bamboo-SERVER.dir/primitive.cpp.o"
 },
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/client/ClientState.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/client/ClientState.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/client/ClientState.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-SERVER.dir/server/BambooServer.cpp.o -c /Users/cyan/code/C++/Bamboo/server/BambooServer.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/server/BambooServer.cpp",
+  "output": "CMakeFiles/Bamboo-SERVER.dir/server/BambooServer.cpp.o"
 },
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/client/SSEClient.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/client/SSEClient.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/client/SSEClient.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-SERVER.dir/server/ServerStorage.cpp.o -c /Users/cyan/code/C++/Bamboo/server/ServerStorage.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/server/ServerStorage.cpp",
+  "output": "CMakeFiles/Bamboo-SERVER.dir/server/ServerStorage.cpp.o"
 },
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/client/Benchmark.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/client/Benchmark.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/client/Benchmark.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-SERVER.dir/server/SSEServer.cpp.o -c /Users/cyan/code/C++/Bamboo/server/SSEServer.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/server/SSEServer.cpp",
+  "output": "CMakeFiles/Bamboo-SERVER.dir/server/SSEServer.cpp.o"
 },
 {
-  "directory": "/home/chariel/Desktop/artifacts/Bamboo/build",
-  "command": "/usr/bin/c++     -g -g   -std=gnu++17 -o CMakeFiles/Bamboo-CLIENT.dir/client/RunSSEClient.cpp.o -c /home/chariel/Desktop/artifacts/Bamboo/client/RunSSEClient.cpp",
-  "file": "/home/chariel/Desktop/artifacts/Bamboo/client/RunSSEClient.cpp"
+  "directory": "/Users/cyan/code/C++/Bamboo/build",
+  "command": "/usr/bin/clang++    -g -g -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -o CMakeFiles/Bamboo-SERVER.dir/server/RunSSEServer.cpp.o -c /Users/cyan/code/C++/Bamboo/server/RunSSEServer.cpp",
+  "file": "/Users/cyan/code/C++/Bamboo/server/RunSSEServer.cpp",
+  "output": "CMakeFiles/Bamboo-SERVER.dir/server/RunSSEServer.cpp.o"
 }
 ]

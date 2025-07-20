@@ -2,11 +2,17 @@ file(REMOVE_RECURSE
   "Bamboo-CLIENT"
   "Bamboo-CLIENT.pdb"
   "CMakeFiles/Bamboo-CLIENT.dir/client/BambooClient.cpp.o"
+  "CMakeFiles/Bamboo-CLIENT.dir/client/BambooClient.cpp.o.d"
   "CMakeFiles/Bamboo-CLIENT.dir/client/Benchmark.cpp.o"
+  "CMakeFiles/Bamboo-CLIENT.dir/client/Benchmark.cpp.o.d"
   "CMakeFiles/Bamboo-CLIENT.dir/client/ClientState.cpp.o"
+  "CMakeFiles/Bamboo-CLIENT.dir/client/ClientState.cpp.o.d"
   "CMakeFiles/Bamboo-CLIENT.dir/client/RunSSEClient.cpp.o"
+  "CMakeFiles/Bamboo-CLIENT.dir/client/RunSSEClient.cpp.o.d"
   "CMakeFiles/Bamboo-CLIENT.dir/client/SSEClient.cpp.o"
+  "CMakeFiles/Bamboo-CLIENT.dir/client/SSEClient.cpp.o.d"
   "CMakeFiles/Bamboo-CLIENT.dir/primitive.cpp.o"
+  "CMakeFiles/Bamboo-CLIENT.dir/primitive.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.
