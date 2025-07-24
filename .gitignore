@@ -1,2 +1,307 @@
-/.vscode
-/build
+# =============================================================================
+# C++ Bamboo Project .gitignore
+# =============================================================================
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# =============================================================================
+# CMake
+# =============================================================================
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# Build directories
+build/
+Build/
+BUILD/
+out/
+cmake-build-*/
+
+# =============================================================================
+# Project Specific Executables
+# =============================================================================
+Bamboo-CLIENT
+Bamboo-SERVER
+test_pi_functions
+test_pi_simple
+test_pi_gtest
+debug_pi_issue
+debug_bamboo_search
+
+# =============================================================================
+# Database files
+# =============================================================================
+*.db
+*.sqlite
+*.sqlite3
+
+# =============================================================================
+# IDE and Editor files
+# =============================================================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Visual Studio
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# CLion
+.idea/
+cmake-build-*/
+
+# Qt Creator
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+*.moc.cpp
+*.qm
+*.prl
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Eclipse CDT
+.metadata
+.project
+.cproject
+.settings/
+
+# Code::Blocks
+*.cbp
+*.layout
+*.depend
+
+# Dev-C++
+*.dev
+
+# =============================================================================
+# Operating System files
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+*.log
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# Backup and temporary files
+# =============================================================================
+*.bak
+*.swp
+*.swo
+*~
+*.orig
+*.rej
+.#*
+#*#
+
+# =============================================================================
+# Logs and runtime files
+# =============================================================================
+*.log
+*.pid
+*.seed
+*.pid.lock
+logs/
+pids/
+
+# =============================================================================
+# Package managers and dependencies
+# =============================================================================
+
+# Conan
+conanfile.txt.user
+conaninfo.txt
+conanbuildinfo.*
+conan.lock
+
+# vcpkg
+vcpkg_installed/
+.vcpkg-root
+
+# Hunter
+_3rdParty/
+
+# =============================================================================
+# Testing and Coverage
+# =============================================================================
+# Google Test
+googletest/
+gtest/
+
+# Coverage reports
+*.gcov
+*.gcda
+*.gcno
+lcov.info
+coverage/
+htmlcov/
+
+# Valgrind
+*.memcheck
+*.helgrind
+*.drd
+*.massif
+
+# =============================================================================
+# Documentation
+# =============================================================================
+doc/html/
+doc/latex/
+Doxyfile.bak
+
+# =============================================================================
+# Profiling and debugging
+# =============================================================================
+*.prof
+*.gprof
+callgrind.out.*
+cachegrind.out.*
+massif.out.*
+*.trace
+
+# GDB
+.gdb_history
+peda-session-*.txt
+
+# =============================================================================
+# Cryptographic keys and certificates (IMPORTANT!)
+# =============================================================================
+*.key
+*.pem
+*.crt
+*.cert
+*.p12
+*.pfx
+*.jks
+*.keystore
+secrets/
+.env
+.env.local
+.env.*.local
+
+# =============================================================================
+# Network and socket files
+# =============================================================================
+*.sock
+*.socket
+
+# =============================================================================
+# Configuration files (be careful with these)
+# =============================================================================
+# Uncomment if you want to ignore local config files
+# config/local.*
+# *.local.conf
+
+# =============================================================================
+# Custom project files
+# =============================================================================
+# Add any project-specific files or directories here
+
+# Temporary test files
+test_output/
+temp/
+
+# Generated documentation
+docs/generated/
+
+# Bamboo project specific files
+SEKU_clnt_data_sse_data_priv_key  # Private key file
+sse_data                          # SSE data file
+debug_point.cpp                   # Debug files (if temporary)
+
+# =============================================================================
+# End of .gitignore
+# =============================================================================
