@@ -45,7 +45,11 @@ int SSEClient::_ConnectToServer()
     flag = 1;
     setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, (const char *)&flag, sizeof(int));
     flag = 3;
+#ifdef __APPLE__
+    setsockopt(sock, IPPROTO_TCP, TCP_KEEPALIVE, (const char *)&flag, sizeof(int));
+#else
     setsockopt(sock, IPPROTO_TCP, TCP_KEEPIDLE, (const char *)&flag, sizeof(int));
+#endif
     flag = 20;
     setsockopt(sock, IPPROTO_TCP, TCP_KEEPCNT, (const char *)&flag, sizeof(int));
     flag = 3;
@@ -285,7 +289,7 @@ void SSEClient::InitializeKey()
     bn_free(bn);
     bn_free(ord);
 
-    recv_data(sock, (unsigned char*)&stat, sizeof(int));
+    recv_data(sock, (unsigned char *)&stat, sizeof(int));
     close(sock);
 }
 

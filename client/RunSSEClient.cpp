@@ -81,9 +81,9 @@ int main(int argc, char *argv[])
 {
     core_init();
     ep_param_set(NIST_P256);
-    //TestClient();
+    TestClient();
 
-    run_Benchmark();
+    // run_Benchmark();
     core_clean();
     return 0;
 }

@@ -16,10 +16,10 @@ extern "C"
 }
 #include "../primitive.h"
 
+using std::cerr;
 using std::cout;
 using std::endl;
 using std::string;
-using std::cerr;
 
 SSEServer::SSEServer(const std::string &addr, int port)
 {
@@ -30,7 +30,7 @@ SSEServer::SSEServer(const std::string &addr, int port)
 int SSEServer::_ServerSockInit()
 {
     struct sockaddr_in srv_addr;
-    int sock,flag;
+    int sock, flag;
     int buf_size = 1024 * 1024 * 10;
 
     sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -41,7 +41,11 @@ int SSEServer::_ServerSockInit()
     flag = 1;
     setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, (const char *)&flag, sizeof(int));
     flag = 3;
+#ifdef __APPLE__
+    setsockopt(sock, IPPROTO_TCP, TCP_KEEPALIVE, (const char *)&flag, sizeof(int));
+#else
     setsockopt(sock, IPPROTO_TCP, TCP_KEEPIDLE, (const char *)&flag, sizeof(int));
+#endif
     flag = 20;
     setsockopt(sock, IPPROTO_TCP, TCP_KEEPCNT, (const char *)&flag, sizeof(int));
     flag = 3;
@@ -128,21 +132,21 @@ void SSEServer::_Setup(int sock)
 
 void SSEServer::_SaveCipher(int sock)
 {
-    std::string l,d,c;
+    std::string l, d, c;
     int stat = 0;
 
     recv_bytes(sock, l);
     recv_bytes(sock, d);
     recv_bytes(sock, c);
 
-    bamboo_server.Save(l,d,c);
+    bamboo_server.Save(l, d, c);
     send(sock, &stat, sizeof(int), 0);
 }
 
 void SSEServer::_SrchQry(int sock)
 {
     std::vector<std::string> result;
-    std::string k,l,mskd,mskc, tmp;
+    std::string k, l, mskd, mskc, tmp;
     int stat = 0;
     int len;
 
@@ -155,7 +159,7 @@ void SSEServer::_SrchQry(int sock)
 
     len = result.size();
 
-    for (int i=0; i<len; i++)
+    for (int i = 0; i < len; i++)
     {
         send_bytes(sock, Encrypt_data(result[i]));
     }
@@ -192,9 +196,9 @@ void SSEServer::_KeyUpdt(int sock)
     int thread_num;
     std::string token;
 
-    recv_data(sock, (unsigned char*)&thread_num, sizeof(int));
+    recv_data(sock, (unsigned char *)&thread_num, sizeof(int));
     recv_bytes(sock, token);
-    if(thread_num == 1)
+    if (thread_num == 1)
         bamboo_server.KeyUpdate(Decrypt_data(token));
     else
         bamboo_server.KeyUpdate_Parallel(Decrypt_data(token), thread_num);
@@ -204,12 +208,12 @@ void SSEServer::_KeyUpdt(int sock)
 
 void SSEServer::_SaveBatch(int sock)
 {
-    int len, stat=0;
+    int len, stat = 0;
     std::vector<std::string> Ls, Ds, Cs;
     std::string tmp;
 
-    recv_data(sock, (unsigned char*)&len, sizeof(int));
-    for(int i=0; i<len;i++)
+    recv_data(sock, (unsigned char *)&len, sizeof(int));
+    for (int i = 0; i < len; i++)
     {
         recv_bytes(sock, tmp);
         Ls.emplace_back(tmp);
@@ -253,7 +257,7 @@ void SSEServer::_ecdh(int sock)
     ep_mul(ele1, ele1, bn);
     ep_write_bin(buf, 256, ele1, 0);
 
-    SHA256(buf, ep_size_bin(ele1, 0), session_key);//得到session_key
+    SHA256(buf, ep_size_bin(ele1, 0), session_key); // 得到session_key
 
     send_bytes(sock, s_ret);
 
@@ -299,6 +303,6 @@ std::string SSEServer::Decrypt_data(const std::string &data)
     AES_set_decrypt_key(this->session_key, 128, &aes_key);
     AES_cbc_encrypt((const unsigned char *)(data.c_str() + 16), buf, data.size() - 16, &aes_key, IV, AES_DECRYPT);
 
-    ret.assign((const char *)(buf+sizeof(int)), *((int*)buf));
+    ret.assign((const char *)(buf + sizeof(int)), *((int *)buf));
     return ret;
 }

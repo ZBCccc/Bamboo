@@ -1,4 +1,0 @@
-/Users/cyan/code/C++/Bamboo/build/CMakeFiles/Bamboo-CLIENT.dir
-/Users/cyan/code/C++/Bamboo/build/CMakeFiles/Bamboo-SERVER.dir
-/Users/cyan/code/C++/Bamboo/build/CMakeFiles/edit_cache.dir
-/Users/cyan/code/C++/Bamboo/build/CMakeFiles/rebuild_cache.dir

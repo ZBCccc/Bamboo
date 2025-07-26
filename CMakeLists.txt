@@ -3,8 +3,22 @@ project(Bamboo)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# 添加Homebrew路径支持
+if(APPLE AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64")
+    set(HOMEBREW_PREFIX "/opt/homebrew")
+    # 添加PostgreSQL特定路径
+    set(PostgreSQL_ROOT "/opt/homebrew")
+    list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew")
+    # 添加PostgreSQL库路径
+    link_directories(/opt/homebrew/lib/postgresql@14)
+else()
+    set(HOMEBREW_PREFIX "/usr/local")
+endif()
+
+include_directories(${HOMEBREW_PREFIX}/include)
+link_directories(${HOMEBREW_PREFIX}/lib)
+
 link_libraries(-lrelic -lcrypto -lgmp -lpthread)
-link_directories(/usr/local/lib)
 
 add_executable(Bamboo-CLIENT
         primitive.h
@@ -34,4 +48,11 @@ target_link_libraries(Bamboo-SERVER
         -lpthread
         pqxx
         pq)
+
+# =============================================================================
+# 测试子项目
+# =============================================================================
+# 添加测试子目录
+add_subdirectory(test)
+
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")

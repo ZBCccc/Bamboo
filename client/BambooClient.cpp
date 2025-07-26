@@ -1,6 +1,7 @@
 #include "BambooClient.h"
 #include "../primitive.h"
 #include <set>
+#include <iostream>
 
 extern "C"
 {
@@ -38,7 +39,7 @@ int BambooClient::Setup()
 }
 
 int BambooClient::DataUpdate(std::string &L, std::string &D, std::string &C, BambooOp op, const std::string &keyword,
-                           const std::string &id)
+                             const std::string &id)
 {
     StateCell cell;
     unsigned char buf1[64];
@@ -99,7 +100,7 @@ int BambooClient::DataUpdate(std::string &L, std::string &D, std::string &C, Bam
 }
 
 int BambooClient::Trapdoor(std::string &K_out, std::string &L, std::string &MskD, std::string &MskC,
-                         const std::string &keyword, int &cnt_w)
+                           const std::string &keyword, int &cnt_w)
 {
     unsigned char buf[64];
     StateCell cell;
@@ -148,7 +149,7 @@ int BambooClient::Trapdoor(std::string &K_out, std::string &L, std::string &MskD
 }
 
 int BambooClient::DecryptResult(std::vector<std::string> &plain_out, const std::vector<std::string> &cipher_in,
-                              const std::string &keyword)
+                                const std::string &keyword)
 {
     ep_t ele;
     bn_t c, d, e, ord;
@@ -174,6 +175,14 @@ int BambooClient::DecryptResult(std::vector<std::string> &plain_out, const std::
         ep_read_bin(ele, (const unsigned char *)cipher_in[i].c_str(), 33);
         ep_mul(ele, ele, d);
         pi_inv(s1, ele);
+
+        // 检查pi_inv是否成功返回有效字符串
+        if (s1.empty() || s1.size() < 1)
+        {
+            cerr << "Warning: pi_inv returned invalid string, skipping entry" << endl;
+            continue;
+        }
+
         s2.assign(s1.begin() + 1, s1.end());
         if (s1[0] == '1')
             tmp.emplace(s2);
@@ -251,7 +260,7 @@ void BambooClient::LoadData(const std::string &filename)
 }
 
 void BambooClient::BatchDataUpdate(vector<std::string> &Ls, vector<std::string> &Ds, vector<std::string> &Cs,
-                                 const string &keyword, const vector<std::string> &ids, BambooOp op)
+                                   const string &keyword, const vector<std::string> &ids, BambooOp op)
 {
     StateCell cell;
     unsigned char buf1[64];

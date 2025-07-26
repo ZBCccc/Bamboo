@@ -6,6 +6,7 @@
 #include <thread>
 #include <mutex>
 #include "../primitive.h"
+#include <iostream>
 
 extern "C"
 {
@@ -33,7 +34,7 @@ void BambooServer::Save(const std::string &L, const std::string &D, const std::s
 }
 
 void BambooServer::Search(std::vector<std::string> &result, const std::string &K_in, const std::string &L_in,
-                        const std::string &MskD_in, const std::string &MskC_in)
+                          const std::string &MskD_in, const std::string &MskC_in)
 {
     string L, MskD, MskC, tk, cip;
     bn_t K, c, e, d, ord;
@@ -66,8 +67,18 @@ void BambooServer::Search(std::vector<std::string> &result, const std::string &K
 
     while (srv_store.Get(cell))
     {
-        ep_read_bin(ele1, (const unsigned char *)cell.D.c_str(), 33);
-        ep_read_bin(ele2, (const unsigned char *)MskD.c_str(), 33);
+        std::cerr << "cell.D size: " << cell.D.size() << std::endl;
+        std::cerr << "MskD size: " << MskD.size() << std::endl;
+        try
+        {
+            ep_read_bin(ele1, (const unsigned char *)cell.D.c_str(), 33);
+            ep_read_bin(ele2, (const unsigned char *)MskD.c_str(), 33);
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "ep_read_bin failed!" << std::endl;
+        }
+
         ep_sub(ele1, ele1, ele2);
         ep_mul(ele1, ele1, d);
         pi_inv(tk, ele1);
