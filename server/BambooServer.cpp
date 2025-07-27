@@ -67,8 +67,6 @@ void BambooServer::Search(std::vector<std::string> &result, const std::string &K
 
     while (srv_store.Get(cell))
     {
-        std::cerr << "cell.D size: " << cell.D.size() << std::endl;
-        std::cerr << "MskD size: " << MskD.size() << std::endl;
         try
         {
             ep_read_bin(ele1, (const unsigned char *)cell.D.c_str(), 33);

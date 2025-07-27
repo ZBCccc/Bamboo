@@ -24,10 +24,10 @@ BambooClient::~BambooClient()
 
 int BambooClient::Setup()
 {
-    bn_t ord;
+    bn_t ord;   // 大数类型，椭圆曲线的阶
 
     bn_new(ord);
-    ep_curve_get_ord(ord);
+    ep_curve_get_ord(ord);  // 获取当前椭圆曲线的阶
     bn_rand_mod(K, ord);
     bn_rand_mod(K1, ord);
 
@@ -91,8 +91,8 @@ int BambooClient::DataUpdate(std::string &L, std::string &D, std::string &C, Bam
 
     cell.tk = tk1;
     this->state.Put(cell, keyword);
-    ep_free(e_L)
-        ep_free(e_D);
+    ep_free(e_L);
+    ep_free(e_D);
     ep_free(e_C);
     ep_free(e_tmp);
 
@@ -321,8 +321,8 @@ void BambooClient::BatchDataUpdate(vector<std::string> &Ls, vector<std::string> 
 
     this->state.Put(cell, keyword);
 
-    ep_free(e_L)
-        ep_free(e_D);
+    ep_free(e_L);
+    ep_free(e_D);
     ep_free(e_C);
     ep_free(e_tmp);
 }

@@ -15,6 +15,11 @@ else()
     set(HOMEBREW_PREFIX "/usr/local")
 endif()
 
+# 添加 relic 库的路径（优先使用 /usr/local）
+include_directories(/usr/local/include)
+link_directories(/usr/local/lib)
+
+# 添加其他依赖库的路径
 include_directories(${HOMEBREW_PREFIX}/include)
 link_directories(${HOMEBREW_PREFIX}/lib)
 
