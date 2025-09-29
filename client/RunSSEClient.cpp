@@ -66,11 +66,11 @@ void run_Benchmark()
     cerr << "Preparing data..." << endl;
     benchmark.prepare_dataset();
 
-    // cerr << "Bamboo DataUpdate" << endl;
-    // benchmark.benchmark_test_DataUpdate();
+    cerr << "Bamboo DataUpdate" << endl;
+    benchmark.benchmark_test_DataUpdate();
     // for(int i=0;i<3;i++){//*******
-    cerr << "Bamboo Search" << endl;
-    benchmark.benchmark_test_Search();
+    // cerr << "Bamboo Search" << endl;
+    // benchmark.benchmark_test_Search();
     // cerr << "Bamboo delete" << endl;
     // benchmark.benchmark_test_delete("five");
     // cerr << "Bamboo KeyUpdate" << endl;
@@ -81,9 +81,9 @@ int main(int argc, char *argv[])
 {
     core_init();
     ep_param_set(NIST_P256);
-    TestClient();
+    // TestClient();
 
-    // run_Benchmark();
+    run_Benchmark();
     core_clean();
     return 0;
 }

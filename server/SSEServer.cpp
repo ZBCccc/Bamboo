@@ -85,34 +85,27 @@ void SSEServer::Run()
         switch (net_op)
         {
         case OP_SETUP:
-            cerr << "Executing Setup" << endl;
             this->_Setup(clnt_sock);
             break;
         case OP_SAVE_CIPHER:
             this->_SaveCipher(clnt_sock);
             break;
         case OP_SRCH_QRY:
-            cerr << "Executing SrchQry" << endl;
             this->_SrchQry(clnt_sock);
             break;
         case OP_KEY_UPDT:
-            cerr << "Executing KeyUpdt" << endl;
             this->_KeyUpdt(clnt_sock);
             break;
         case OP_ECDH:
-            cerr << "Executing ECDH" << endl;
             this->_ecdh(clnt_sock);
             break;
         case OP_BACKUP_EDB:
-            cerr << "Executing BackupEDB" << endl;
             this->_BackupEDB(clnt_sock);
             break;
         case OP_LOAD_EDB:
-            cerr << "Executing LoadEDB" << endl;
             this->_LoadEDB(clnt_sock);
             break;
         case OP_SAVE_BATCH:
-            cerr << "Executing Save Batch" << endl;
             this->_SaveBatch(clnt_sock);
             break;
         default:

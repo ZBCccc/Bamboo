@@ -115,15 +115,15 @@ void Benchmark::benchmark_test_DataUpdate()
         total_del += elapsed.count();
     }
 
-    // cout << "Encryption with op = Bamboo_add time cost: " << endl;
-    // cout << "\tTotally " << total_entry_num << " records, total " << total_add / loop_num << " us" << endl;
-    // cout << "\taverage time " << total_add / loop_num / total_entry_num << " us" << endl
-    //      << endl;
+    cout << "Encryption with op = Bamboo_add time cost: " << endl;
+    cout << "\tTotally " << total_entry_num << " records, total " << total_add / loop_num << " us" << endl;
+    cout << "\taverage time " << total_add / loop_num / total_entry_num << " us" << endl
+         << endl;
 
-    // cout << "Encryption with op = Bamboo_Del time cost: " << endl;
-    // cout << "\tTotally " << num_data_to_del << " records, total " << total_del / loop_num << " us" << endl;
-    // cout << "\taverage time " << total_del / loop_num / num_data_to_del << " us" << endl
-    //      << endl;
+    cout << "Encryption with op = Bamboo_Del time cost: " << endl;
+    cout << "\tTotally " << num_data_to_del << " records, total " << total_del / loop_num << " us" << endl;
+    cout << "\taverage time " << total_del / loop_num / num_data_to_del << " us" << endl
+         << endl;
 }
 
 void Benchmark::random_select_file_identifiers_(vector<std::string> &ids, set<int> &found_index, const string &keyword,
