@@ -21,7 +21,7 @@ static std::mutex lock_cells;
 
 void BambooServer::Setup()
 {
-    srv_store.Clear();
+    srv_store->Clear();
 }
 
 void BambooServer::Save(const std::string &L, const std::string &D, const std::string &C)
@@ -30,7 +30,7 @@ void BambooServer::Save(const std::string &L, const std::string &D, const std::s
                     .D = D,
                     .C = C};
 
-    srv_store.Put(cell);
+    srv_store->Put(cell);
 }
 
 void BambooServer::Search(std::vector<std::string> &result, const std::string &K_in, const std::string &L_in,
@@ -65,7 +65,7 @@ void BambooServer::Search(std::vector<std::string> &result, const std::string &K
 
     cell.L = L_in;
 
-    while (srv_store.Get(cell))
+    while (srv_store->Get(cell))
     {
         try
         {
@@ -131,7 +131,7 @@ void BambooServer::KeyUpdate(const string &token)
 
     bn_read_bin(d, (const unsigned char *)token.c_str(), 32);
 
-    srv_store.PopAll(ciphers);
+    srv_store->PopAll(ciphers);
 
     for (EDBCell &cell : ciphers)
     {
@@ -151,7 +151,7 @@ void BambooServer::KeyUpdate(const string &token)
         cell.C.assign((char *)buf, 33);
     }
 
-    srv_store.PushBatch(ciphers);
+    srv_store->PushBatch(ciphers);
 
     bn_free(d);
     ep_free(ele1);
@@ -161,12 +161,12 @@ void BambooServer::KeyUpdate(const string &token)
 
 void BambooServer::DumpData(const std::string &name)
 {
-    srv_store.DumpData(name);
+    srv_store->DumpData(name);
 }
 
 void BambooServer::LoadData(const std::string &name)
 {
-    srv_store.LoadData(name);
+    srv_store->LoadData(name);
 }
 
 void BambooServer::KeyUpdate_Parallel(const string &token, int num_threads)
@@ -176,7 +176,7 @@ void BambooServer::KeyUpdate_Parallel(const string &token, int num_threads)
     string x = token;
     int _num_threads = 0;
 
-    srv_store.PopAll(cells);
+    srv_store->PopAll(cells);
 
     _num_threads = num_threads > (int)cells.size() ? (int)cells.size() : num_threads;
 
@@ -194,7 +194,7 @@ void BambooServer::KeyUpdate_Parallel(const string &token, int num_threads)
     for (int i = 0; i < _num_threads; i++)
         threads[i].join();
 
-    srv_store.PushBatch(cells);
+    srv_store->PushBatch(cells);
 }
 
 void BambooServer::SaveBatch(const vector<std::string> &Ls, const vector<std::string> &Ds, const vector<std::string> &Cs)
@@ -209,7 +209,7 @@ void BambooServer::SaveBatch(const vector<std::string> &Ls, const vector<std::st
         cell.C = Cs[i];
         cells.emplace_back(cell);
     }
-    this->srv_store.PushBatch(cells);
+    this->srv_store->PushBatch(cells);
 }
 
 void do_KeyUpdate_in_parallel(vector<EDBCell> &cells, int number, string &delta, int num_threads)

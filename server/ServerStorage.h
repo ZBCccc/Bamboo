@@ -2,7 +2,7 @@
 #define SERVERSTORAGE_H
 
 #include <string>
-#include <pqxx/pqxx>
+#include <vector>
 
 struct EDBCell
 {
@@ -16,24 +16,21 @@ class ServerStorage
 public:
     ServerStorage();
 
-    ~ServerStorage();
+    virtual ~ServerStorage();
 
-    void Clear();
+    virtual void Clear() = 0;
 
-    bool Get(EDBCell &in_out);
+    virtual bool Get(EDBCell &in_out) = 0;
 
-    void Put(const EDBCell &out);
+    virtual void Put(const EDBCell &out) = 0;
 
-    void PopAll(std::vector<EDBCell> &cip_all);
+    virtual void PopAll(std::vector<EDBCell> &cip_all) = 0;
 
-    void PushBatch(const std::vector<EDBCell> &cip_all);
+    virtual void PushBatch(const std::vector<EDBCell> &cip_all) = 0;
 
-    void DumpData(const std::string &dname);
+    virtual void DumpData(const std::string &dname) = 0;
 
-    void LoadData(const std::string &dname);
-
-private:
-    pqxx::connection conn;
+    virtual void LoadData(const std::string &dname) = 0;
 };
 
 #endif

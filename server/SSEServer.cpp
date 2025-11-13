@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <memory>
 #include "SSEServer.h"
 #include <string>
 extern "C"
@@ -17,7 +18,6 @@ extern "C"
 #include "../primitive.h"
 
 using std::cerr;
-using std::cout;
 using std::endl;
 using std::string;
 
@@ -25,6 +25,8 @@ SSEServer::SSEServer(const std::string &addr, int port)
 {
     server_addr = addr;
     server_port = port;
+    auto storage = std::make_unique<ServerStorageMemory>();
+    bamboo_server.SetStorage(std::move(storage));
 }
 
 int SSEServer::_ServerSockInit()
@@ -138,6 +140,9 @@ void SSEServer::_SaveCipher(int sock)
 
 void SSEServer::_SrchQry(int sock)
 {
+    std::chrono::steady_clock::time_point begin, end;
+    std::chrono::duration<double, std::micro> elapsed;
+
     std::vector<std::string> result;
     std::string k, l, mskd, mskc, tmp;
     int stat = 0;
@@ -148,18 +153,25 @@ void SSEServer::_SrchQry(int sock)
     recv_bytes(sock, mskd);
     recv_bytes(sock, mskc);
 
+    begin = std::chrono::steady_clock::now();
     bamboo_server.Search(result, Decrypt_data(k), Decrypt_data(l), Decrypt_data(mskd), Decrypt_data(mskc));
+    end = std::chrono::steady_clock::now();
+
+    elapsed = end - begin;
+    std::cerr << "Search operation took " << elapsed.count() << " microseconds." << std::endl;
 
     len = result.size();
+    std::cerr << "Found " << len << " results." << std::endl;
 
     for (int i = 0; i < len; i++)
     {
         send_bytes(sock, Encrypt_data(result[i]));
     }
 
-    for (int i = result.size(); i < A_MAX; i++)
+    const std::string padValue = result.empty() ? std::string() : result[0];
+    for (int i = len; i < A_MAX; i++)
     {
-        send_bytes(sock, Encrypt_data(result[0]));
+        send_bytes(sock, Encrypt_data(padValue));
     }
 
     send(sock, &stat, sizeof(int), 0);

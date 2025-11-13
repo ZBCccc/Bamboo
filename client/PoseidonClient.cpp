@@ -1,6 +1,4 @@
-#include "BambooClient.h"
-#include "ClientStateSQL.h"
-#include "ClientStateMemory.h"
+#include "PoseidonClient.h"
 #include "../primitive.h"
 #include <set>
 #include <iostream>
@@ -12,41 +10,49 @@ extern "C"
 
 using namespace std;
 
-BambooClient::BambooClient()
+PoseidonClient::PoseidonClient()
 {
-    bn_new(K);
     bn_new(K1);
-    state = std::make_unique<ClientStateMemory>();
+    bn_new(K2);
+    bn_new(Kx);
+    bn_new(Ky);
+    bn_new(Kz);
 }
 
-BambooClient::~BambooClient()
+PoseidonClient::~PoseidonClient()
 {
-    bn_clean(K);
     bn_clean(K1);
+    bn_clean(K2);
+    bn_clean(Kx);
+    bn_clean(Ky);
+    bn_clean(Kz);
 }
 
-int BambooClient::Setup()
+int PoseidonClient::Setup()
 {
     bn_t ord;   // 大数类型，椭圆曲线的阶
 
     bn_new(ord);
     ep_curve_get_ord(ord);  // 获取当前椭圆曲线的阶
-    bn_rand_mod(K, ord);
     bn_rand_mod(K1, ord);
+    bn_rand_mod(K2, ord);
+    bn_rand_mod(Kx, ord);
+    bn_rand_mod(Ky, ord);
+    bn_rand_mod(Kz, ord);
 
-    this->state->Clear();
+    this->state.Clear();
 
     bn_clean(ord);
 
     return 0;
 }
 
-int BambooClient::DataUpdate(std::string &L, std::string &D, std::string &C, BambooOp op, const std::string &keyword,
+int PoseidonClient::DataUpdate(std::string &L, std::string &D, std::string &C, PoseidonOp op, const std::string &keyword,
                              const std::string &id)
 {
     StateCell cell;
     unsigned char buf1[64];
-    string tk1, s;
+    string tk1, rand1, s;
     ep_t e_L, e_D, e_C, e_tmp;
 
     ep_new(e_L);
@@ -54,16 +60,20 @@ int BambooClient::DataUpdate(std::string &L, std::string &D, std::string &C, Bam
     ep_new(e_C);
     ep_new(e_tmp);
 
-    if (!this->state->Get(cell, keyword))
+    if (!this->state.Get(cell, keyword))
     {
         RAND_bytes(buf1, 16);
         cell.tk.assign((char *)buf1, 16);
+        RAND_bytes(buf1, 16);
+        cell.rand.assign((char *)buf1, 16);
         cell.cntw = 0;
     }
     cell.cntw += 1;
 
     RAND_bytes(buf1, 16);
     tk1.assign((char *)buf1, 16);
+    RAND_bytes(buf1, 16);
+    rand1.assign((char *)buf1, 16);
 
     Hash_H1(e_L, tk1);
     ep_mul(e_L, e_L, this->K);
@@ -93,7 +103,7 @@ int BambooClient::DataUpdate(std::string &L, std::string &D, std::string &C, Bam
     C.assign((char *)buf1, 33);
 
     cell.tk = tk1;
-    this->state->Put(cell, keyword);
+    this->state.Put(cell, keyword);
     ep_free(e_L);
     ep_free(e_D);
     ep_free(e_C);
@@ -102,7 +112,7 @@ int BambooClient::DataUpdate(std::string &L, std::string &D, std::string &C, Bam
     return 0;
 }
 
-int BambooClient::Trapdoor(std::string &K_out, std::string &L, std::string &MskD, std::string &MskC,
+int PoseidonClient::Trapdoor(std::string &K_out, std::string &L, std::string &MskD, std::string &MskC,
                            const std::string &keyword, int &cnt_w)
 {
     unsigned char buf[64];
@@ -111,7 +121,7 @@ int BambooClient::Trapdoor(std::string &K_out, std::string &L, std::string &MskD
     int mid;
     ep_t e_L, e_MskC, e_tmp, e_MskD;
 
-    if (!this->state->Get(cell, keyword))
+    if (!this->state.Get(cell, keyword))
         return -1;
 
     ep_new(e_L);
@@ -151,7 +161,7 @@ int BambooClient::Trapdoor(std::string &K_out, std::string &L, std::string &MskD
     return 0;
 }
 
-int BambooClient::DecryptResult(std::vector<std::string> &plain_out, const std::vector<std::string> &cipher_in,
+int PoseidonClient::DecryptResult(std::vector<std::string> &plain_out, const std::vector<std::string> &cipher_in,
                                 const std::string &keyword)
 {
     ep_t ele;
@@ -161,7 +171,7 @@ int BambooClient::DecryptResult(std::vector<std::string> &plain_out, const std::
     set<string> tmp;
     StateCell cell;
 
-    if (!this->state->Get(cell, keyword))
+    if (!this->state.Get(cell, keyword))
         return -1;
 
     ep_new(ele);
@@ -205,7 +215,7 @@ int BambooClient::DecryptResult(std::vector<std::string> &plain_out, const std::
     return 0;
 }
 
-int BambooClient::KeyUpdate(std::string &Delta)
+int PoseidonClient::KeyUpdate(std::string &Delta)
 {
     bn_t delta, ord;
     unsigned char buf[64];
@@ -231,12 +241,12 @@ int BambooClient::KeyUpdate(std::string &Delta)
     return 0;
 }
 
-void BambooClient::DumpData(const std::string &filename)
+void PoseidonClient::DumpData(const std::string &filename)
 {
     unsigned char buf[64];
     FILE *fkey;
 
-    this->state->DumpData(filename + ".db");
+    this->state.DumpData(filename + ".db");
 
     fkey = fopen((filename + "_priv_key").c_str(), "wb");
     bn_write_bin(buf, 32, K);
@@ -246,12 +256,12 @@ void BambooClient::DumpData(const std::string &filename)
     fclose(fkey);
 }
 
-void BambooClient::LoadData(const std::string &filename)
+void PoseidonClient::LoadData(const std::string &filename)
 {
     unsigned char buf[64];
     FILE *fkey;
 
-    this->state->LoadData(filename + ".db");
+    this->state.LoadData(filename + ".db");
 
     fkey = fopen((filename + "_priv_key").c_str(), "rb");
     fread(buf, sizeof(char), 32, fkey);
@@ -262,8 +272,8 @@ void BambooClient::LoadData(const std::string &filename)
     fclose(fkey);
 }
 
-void BambooClient::BatchDataUpdate(vector<std::string> &Ls, vector<std::string> &Ds, vector<std::string> &Cs,
-                                   const string &keyword, const vector<std::string> &ids, BambooOp op)
+void PoseidonClient::BatchDataUpdate(vector<std::string> &Ls, vector<std::string> &Ds, vector<std::string> &Cs,
+                                   const string &keyword, const vector<std::string> &ids, PoseidonOp op)
 {
     StateCell cell;
     unsigned char buf1[64];
@@ -275,7 +285,7 @@ void BambooClient::BatchDataUpdate(vector<std::string> &Ls, vector<std::string> 
     ep_new(e_C);
     ep_new(e_tmp);
 
-    if (!this->state->Get(cell, keyword))
+    if (!this->state.Get(cell, keyword))
     {
         RAND_bytes(buf1, 16);
         cell.tk.assign((char *)buf1, 16);
@@ -322,7 +332,7 @@ void BambooClient::BatchDataUpdate(vector<std::string> &Ls, vector<std::string> 
         cell.cntw += 1;
     }
 
-    this->state->Put(cell, keyword);
+    this->state.Put(cell, keyword);
 
     ep_free(e_L);
     ep_free(e_D);

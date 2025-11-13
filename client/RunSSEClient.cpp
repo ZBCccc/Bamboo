@@ -3,7 +3,6 @@
 #include <iostream>
 #include "Benchmark.h"
 
-using std::cerr;
 using std::cout;
 using std::endl;
 using std::vector;
@@ -63,18 +62,19 @@ void run_Benchmark()
 {
     Benchmark benchmark("sse_data", "sse_data", "127.0.0.1", 54324);
 
-    cerr << "Preparing data..." << endl;
+    cout << "Preparing data..." << endl;
     benchmark.prepare_dataset();
 
-    cerr << "Bamboo DataUpdate" << endl;
+    cout << "Bamboo DataUpdate" << endl;
     benchmark.benchmark_test_DataUpdate();
     // for(int i=0;i<3;i++){//*******
-    // cerr << "Bamboo Search" << endl;
-    // benchmark.benchmark_test_Search();
-    // cerr << "Bamboo delete" << endl;
-    // benchmark.benchmark_test_delete("five");
-    // cerr << "Bamboo KeyUpdate" << endl;
-    // benchmark.benchmark_test_keyUpdate();}
+    cout << "Bamboo Search" << endl;
+    benchmark.benchmark_test_Search();
+    cout << "Bamboo delete" << endl;
+    // benchmark.benchmark_test_delete("fifty");
+    // cout << "Bamboo KeyUpdate" << endl;
+    // benchmark.benchmark_test_keyUpdate();
+    //}
 }
 
 int main(int argc, char *argv[])

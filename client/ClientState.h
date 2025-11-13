@@ -4,11 +4,6 @@
 #include <string>
 #include <vector>
 
-extern "C"
-{
-#include <sqlite3.h>
-};
-
 struct StateCell
 {
     std::string tk;
@@ -18,26 +13,20 @@ struct StateCell
 class ClientState
 {
 public:
-    ClientState();
+    ClientState() = default;
+    virtual ~ClientState() = default;
 
-    ~ClientState();
+    virtual bool Get(StateCell &out, const std::string &keyword) = 0;
 
-    // True if the data corresponding to the given keyword exists
-    bool Get(StateCell &out, const std::string &keyword);
+    virtual void Put(const StateCell &in, const std::string &keyword) = 0;
 
-    void Put(const StateCell &in, const std::string &keyword);
+    virtual void Clear() = 0;
 
-    void Clear();
+    virtual void DumpData(const std::string &dname = "bamboo_client_bak") = 0;
 
-    void DumpData(const std::string &dname = "bamboo_client_bak");
+    virtual void LoadData(const std::string &dname = "bamboo_client_bak") = 0;
 
-    void LoadData(const std::string &dname = "bamboo_client_bak");
-
-    void GetKeywordsCnt(std::vector<int> &cnt);
-
-private:
-    std::string db_path;
-    sqlite3 *db;
+    virtual void GetKeywordsCnt(std::vector<int> &cnt) = 0;
 };
 
 #endif

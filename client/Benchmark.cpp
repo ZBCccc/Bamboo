@@ -103,16 +103,17 @@ void Benchmark::benchmark_test_DataUpdate()
         elapsed = end - begin;
         total_add += elapsed.count();
 
-        random_select_delected_entries(data_to_delete, num_data_to_del);
+        // 删除
+        // random_select_delected_entries(data_to_delete, num_data_to_del);
 
-        begin = chrono::steady_clock::now();
-        for (auto &itr : data_to_delete)
-        {
-            bamboo_client.DataUpdate(L, D, C, Bamboo_del, itr.first, itr.second);
-        }
-        end = chrono::steady_clock::now();
-        elapsed = end - begin;
-        total_del += elapsed.count();
+        // begin = chrono::steady_clock::now();
+        // for (auto &itr : data_to_delete)
+        // {
+        //     bamboo_client.DataUpdate(L, D, C, Bamboo_del, itr.first, itr.second);
+        // }
+        // end = chrono::steady_clock::now();
+        // elapsed = end - begin;
+        // total_del += elapsed.count();
     }
 
     cout << "Encryption with op = Bamboo_add time cost: " << endl;
@@ -213,18 +214,18 @@ void Benchmark::benchmark_test_Search()
         elapsed = end - begin;
         total_time = elapsed.count();
 
-        // cout << "Searching with Bamboo for keyword: " << itr.first << endl;
-        // cout << "\tTotally find " << plaintexts.size() << " records and the last file ID is "
-        //      << plaintexts[plaintexts.size() - 1] << endl;
-        // cout << "\tTime cost of client is " << std::fixed << bench_clnt_time << " us, average is "
-        //      << bench_clnt_time / plaintexts.size() << " us" << endl;
-        // cout << "\tTime cost of the whole search phase is " << fixed << total_time << " us" << endl;
-        // cout << "\tAverage time cost is " << fixed << total_time / plaintexts.size() << " us" << endl;
-        // cout << "\tBandwidth cost is " << bench_bandwidth << " Bytes"<< endl;
         cout << "Searching with Bamboo for keyword: " << itr.first << endl;
-        cout << "\tTotally find " << plaintexts.size() << " records" << endl;
-        cout <<  std::fixed << bench_clnt_time << endl;
-        cout <<  fixed << total_time << endl;
+        cout << "\tTotally find " << plaintexts.size() << " records and the last file ID is "
+             << plaintexts[plaintexts.size() - 1] << endl;
+        cout << "\tTime cost of client is " << std::fixed << bench_clnt_time << " us, average is "
+             << bench_clnt_time / plaintexts.size() << " us" << endl;
+        cout << "\tTime cost of the whole search phase is " << fixed << total_time << " us" << endl;
+        cout << "\tAverage time cost is " << fixed << total_time / plaintexts.size() << " us" << endl;
+        cout << "\tBandwidth cost is " << bench_bandwidth << " Bytes"<< endl;
+        // cout << "Searching with Bamboo for keyword: " << itr.first << endl;
+        // cout << "\tTotally find " << plaintexts.size() << " records" << endl;
+        // cout <<  std::fixed << bench_clnt_time << endl;
+        // cout <<  fixed << total_time << endl;
         // cout <<  fixed << total_time / plaintexts.size() << endl;
     }
 }

@@ -2,6 +2,8 @@
 #define SSESERVER_H
 
 #include "BambooServer.h"
+#include "ServerStorageMemory.h"
+#include "ServerStorageSQL.h"
 #include <gmpxx.h>
 extern "C"
 {

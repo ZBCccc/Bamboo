@@ -1,9 +1,8 @@
-#include "ClientState.h"
-#include <iostream>
+#include "ClientStateSQL.h"
 
 using namespace std;
 
-ClientState::ClientState()
+ClientStateSQL::ClientStateSQL()
 {
     db_path = "./bamboo_clnt_state.db";
     sqlite3_open(db_path.c_str(), &db);
@@ -24,13 +23,13 @@ ClientState::ClientState()
     sqlite3_finalize(stmt_create_table);
 }
 
-ClientState::~ClientState()
+ClientStateSQL::~ClientStateSQL()
 {
     sqlite3_close(db);
     db = nullptr;
 }
 
-bool ClientState::Get(StateCell &out, const string &keyword)
+bool ClientStateSQL::Get(StateCell &out, const string &keyword)
 {
     sqlite3_stmt *stmt_read_data;
 
@@ -55,7 +54,7 @@ bool ClientState::Get(StateCell &out, const string &keyword)
     return true;
 }
 
-void ClientState::Put(const StateCell &in, const string &keyword)
+void ClientStateSQL::Put(const StateCell &in, const string &keyword)
 {
     sqlite3_stmt *stmt_update_data;
 
@@ -71,7 +70,7 @@ void ClientState::Put(const StateCell &in, const string &keyword)
     sqlite3_finalize(stmt_update_data);
 }
 
-void ClientState::Clear()
+void ClientStateSQL::Clear()
 {
     sqlite3_stmt *stmt_clear_data;
 
@@ -84,7 +83,7 @@ void ClientState::Clear()
     sqlite3_finalize(stmt_clear_data);
 }
 
-void ClientState::DumpData(const string &dname)
+void ClientStateSQL::DumpData(const string &dname)
 {
     sqlite3 *db_back;
     sqlite3_backup *sqlb;
@@ -98,7 +97,7 @@ void ClientState::DumpData(const string &dname)
     sqlite3_close(db_back);
 }
 
-void ClientState::LoadData(const string &dname)
+void ClientStateSQL::LoadData(const string &dname)
 {
     sqlite3 *db_back;
     sqlite3_backup *sqlb;
@@ -111,7 +110,7 @@ void ClientState::LoadData(const string &dname)
     sqlite3_close(db_back);
 }
 
-void ClientState::GetKeywordsCnt(vector<int> &cnt)
+void ClientStateSQL::GetKeywordsCnt(vector<int> &cnt)
 {
     sqlite3_stmt *stmt_get_cnt;
 

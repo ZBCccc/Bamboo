@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include "ServerStorage.h"
 
 class BambooServer
@@ -11,6 +12,11 @@ public:
     BambooServer() = default;
 
     ~BambooServer() = default;
+
+    void SetStorage(std::unique_ptr<ServerStorage> storage)
+    {
+        srv_store = std::move(storage);
+    }
 
     void Setup();
 
@@ -32,7 +38,7 @@ public:
     void LoadData(const std::string &name = "Backup");
 
 private:
-    ServerStorage srv_store;
+    std::unique_ptr<ServerStorage> srv_store;
 };
 
 void do_KeyUpdate_in_parallel(std::vector<EDBCell> &cells, int number, std::string &delta, int num_threads);

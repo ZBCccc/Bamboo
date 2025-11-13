@@ -30,15 +30,20 @@ add_executable(Bamboo-CLIENT
         primitive.cpp
         client/BambooClient.cpp
         client/BambooClient.h
-        client/ClientState.cpp
         client/ClientState.h
+        client/ClientStateSQL.cpp
+        client/ClientStateSQL.h
+        client/ClientStateMemory.cpp
+        client/ClientStateMemory.h
         client/SSEClient.cpp
         client/SSEClient.h
         client/Benchmark.h
         client/Benchmark.cpp
         client/RunSSEClient.cpp)
 target_link_libraries(Bamboo-CLIENT
-        -lsqlite3)
+        -lsqlite3
+        -lprofiler)
+        
 
 add_executable(Bamboo-SERVER
         primitive.h
@@ -46,11 +51,15 @@ add_executable(Bamboo-SERVER
         server/BambooServer.cpp
         server/BambooServer.h
         server/ServerStorage.cpp
+        server/ServerStorage.h
+        server/ServerStorageSQL.cpp
+        server/ServerStorageMemory.cpp
         server/SSEServer.cpp
         server/SSEServer.h
         server/RunSSEServer.cpp)
 target_link_libraries(Bamboo-SERVER
         -lpthread
+        -lprofiler
         pqxx
         pq)
 

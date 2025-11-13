@@ -8,7 +8,7 @@ extern "C" {
 #include<relic/relic.h>
 };
 
-#define A_MAX (500000)
+#define A_MAX (20)
 
 enum NetworkOp
 {
