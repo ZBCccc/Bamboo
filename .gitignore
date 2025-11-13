@@ -301,6 +301,9 @@ docs/generated/
 SEKU_clnt_data_sse_data_priv_key  # Private key file
 sse_data                          # SSE data file
 debug_point.cpp                   # Debug files (if temporary)
+SEKU_clnt_data_sse_data.db.mem  # In-memory database files
+seku_srv_sse_data.mem      # In-memory database files
+*.mem                         # General memory files
 
 # Test directory build files
 test/build/                       # Test build directory
@@ -308,6 +311,7 @@ test/test_report.txt              # Generated test reports
 test/*.db                         # Test database files
 test/*.log                        # Test log files
 
+*.cache
 # =============================================================================
 # End of .gitignore
 # =============================================================================
