@@ -1,72 +1,43 @@
 cmake_minimum_required(VERSION 3.10)
-project(Bamboo)
+project(BambooPoseidon)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 添加Homebrew路径支持
+# Set output directories to build directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
 if(APPLE AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64")
     set(HOMEBREW_PREFIX "/opt/homebrew")
-    # 添加PostgreSQL特定路径
     set(PostgreSQL_ROOT "/opt/homebrew")
     list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew")
-    # 添加PostgreSQL库路径
     link_directories(/opt/homebrew/lib/postgresql@14)
 else()
     set(HOMEBREW_PREFIX "/usr/local")
 endif()
 
-# 添加 relic 库的路径（优先使用 /usr/local）
 include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
 
-# 添加其他依赖库的路径
 include_directories(${HOMEBREW_PREFIX}/include)
 link_directories(${HOMEBREW_PREFIX}/lib)
 
+# Common libraries
 link_libraries(-lrelic -lcrypto -lgmp -lpthread)
 
-add_executable(Bamboo-CLIENT
-        primitive.h
-        primitive.cpp
-        client/BambooClient.cpp
-        client/BambooClient.h
-        client/ClientState.h
-        client/ClientStateSQL.cpp
-        client/ClientStateSQL.h
-        client/ClientStateMemory.cpp
-        client/ClientStateMemory.h
-        client/SSEClient.cpp
-        client/SSEClient.h
-        client/Benchmark.h
-        client/Benchmark.cpp
-        client/RunSSEClient.cpp)
-target_link_libraries(Bamboo-CLIENT
-        -lsqlite3
-        -lprofiler)
-        
+# Options
+option(ENABLE_BAMBOO "Build Bamboo targets" ON)
+option(ENABLE_POSEIDON "Build Poseidon targets" OFF)
 
-add_executable(Bamboo-SERVER
-        primitive.h
-        primitive.cpp
-        server/BambooServer.cpp
-        server/BambooServer.h
-        server/ServerStorage.cpp
-        server/ServerStorage.h
-        server/ServerStorageSQL.cpp
-        server/ServerStorageMemory.cpp
-        server/SSEServer.cpp
-        server/SSEServer.h
-        server/RunSSEServer.cpp)
-target_link_libraries(Bamboo-SERVER
-        -lpthread
-        -lprofiler
-        pqxx
-        pq)
+# Add subdirectories
+add_subdirectory(src/core)
 
-# =============================================================================
-# 测试子项目
-# =============================================================================
-# 添加测试子目录
-add_subdirectory(test)
+if(ENABLE_BAMBOO)
+  add_subdirectory(src/bamboo)
+endif()
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+if(ENABLE_POSEIDON)
+  add_subdirectory(src/poseidon)
+endif()
