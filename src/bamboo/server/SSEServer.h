@@ -3,45 +3,42 @@
 
 #include "BambooServer.h"
 #include <gmpxx.h>
-extern "C"
-{
+extern "C" {
 #include <relic/relic.h>
 };
 
-class SSEServer
-{
+class SSEServer {
 public:
+  SSEServer() = delete;
+  SSEServer(const std::string &addr, int port);
 
-    SSEServer() = delete;
-    SSEServer(const std::string &addr, int port);
-
-    void Run();
+  void Run();
 
 private:
-    BambooServer bamboo_server;
-    std::string server_addr;
-    int server_port;
-    unsigned char session_key[32];
-    std::string Encrypt_data(const std::string &data);
-    std::string Decrypt_data(const std::string &data);
+  BambooServer bamboo_server;
+  std::string server_addr;
+  int server_port;
+  unsigned char session_key[32];
+  std::string Encrypt_data(const std::string &data);
+  std::string Decrypt_data(const std::string &data);
 
-    void _Setup(int sock);
+  void _Setup(int sock);
 
-    void _SaveCipher(int sock);
+  void _SaveCipher(int sock);
 
-    void _SrchQry(int sock);
+  void _SrchQry(int sock);
 
-    void _KeyUpdt(int sock);
+  void _KeyUpdt(int sock);
 
-    void _ecdh(int sock);
+  void _ecdh(int sock);
 
-    void _BackupEDB(int sock);
+  void _BackupEDB(int sock);
 
-    void _LoadEDB(int sock);
+  void _LoadEDB(int sock);
 
-    void _SaveBatch(int sock);
+  void _SaveBatch(int sock);
 
-    int _ServerSockInit();
+  int _ServerSockInit();
 };
 
 #endif

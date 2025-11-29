@@ -29,7 +29,7 @@ link_libraries(-lrelic -lcrypto -lgmp -lpthread)
 
 # Options
 option(ENABLE_BAMBOO "Build Bamboo targets" ON)
-option(ENABLE_POSEIDON "Build Poseidon targets" OFF)
+option(ENABLE_POSEIDON "Build Poseidon targets" ON)
 
 # Add subdirectories
 add_subdirectory(src/core)
@@ -41,3 +41,11 @@ endif()
 if(ENABLE_POSEIDON)
   add_subdirectory(src/poseidon)
 endif()
+
+file(GLOB_RECURSE ALL_CXX_SOURCE_FILES
+     CONFIGURE_DEPENDS
+     *.cpp *.h *.hpp)
+add_custom_target(clang-format
+    COMMAND clang-format -i ${ALL_CXX_SOURCE_FILES}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Running clang-format on all sources")

@@ -1,25 +1,24 @@
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
 
-#include <string>
 #include <gmpxx.h>
+#include <string>
 
 extern "C" {
-#include<relic/relic.h>
+#include <relic/relic.h>
 };
 
 #define A_MAX (20)
 
-enum NetworkOp
-{
-    OP_SETUP,
-    OP_SAVE_CIPHER,
-    OP_SRCH_QRY,
-    OP_KEY_UPDT,
-    OP_ECDH,
-    OP_BACKUP_EDB,
-    OP_LOAD_EDB,
-    OP_SAVE_BATCH
+enum NetworkOp {
+  OP_SETUP,
+  OP_SAVE_CIPHER,
+  OP_SRCH_QRY,
+  OP_KEY_UPDT,
+  OP_ECDH,
+  OP_BACKUP_EDB,
+  OP_LOAD_EDB,
+  OP_SAVE_BATCH
 };
 
 void pi(ep_t out, const std::string &in);
