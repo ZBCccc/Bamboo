@@ -6,7 +6,9 @@ add_library(poseidon_client STATIC
     client/PoseidonClientStateMemory.h
     client/SSEClient.cpp
     client/SSEClient.h
-    core/metadata.h
+    types/metadata.h
+    tools/Benchmark.h
+    tools/Benchmark.cpp
 )
 
 target_link_libraries(poseidon_client
@@ -16,14 +18,21 @@ target_link_libraries(poseidon_client
 target_include_directories(poseidon_client PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../core
+    ${CMAKE_CURRENT_SOURCE_DIR}/types
 )
 
 add_library(poseidon_server STATIC
     server/PoseidonServer.h
     server/PoseidonServer.cpp
+    server/SSEServer.cpp
+    server/SSEServer.h
+    types/metadata.h
     storage/ServerStorage.h
+    storage/ServerStorage.cpp
     storage/impl/ServerStorageMemory.h
     storage/impl/ServerStorageMemory.cpp
+    tools/Benchmark.h
+    tools/Benchmark.cpp
 )
 
 target_link_libraries(poseidon_server
@@ -31,20 +40,32 @@ target_link_libraries(poseidon_server
 )
 
 target_include_directories(poseidon_server PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../core
+    ${CMAKE_CURRENT_SOURCE_DIR}/types
 )
 
-# Optional app components (benchmarks)
-add_library(poseidon_app STATIC
-    app/Benchmark.h
-    app/Benchmark.cpp
+add_executable(Poseidon-CLIENT
+    tools/RunSSEClient.cpp
 )
 
-target_link_libraries(poseidon_app
+target_link_libraries(Poseidon-CLIENT
     poseidon_client
 )
 
-target_include_directories(poseidon_app PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../core
+add_executable(Poseidon-SERVER
+    tools/RunSSEServer.cpp
+)
+
+target_link_libraries(Poseidon-SERVER
+    poseidon_server
+)
+
+add_executable(Poseidon-TEST
+    tools/TestPoseidon.cpp
+)
+
+target_link_libraries(Poseidon-TEST
+    poseidon_client
+    poseidon_server
 )

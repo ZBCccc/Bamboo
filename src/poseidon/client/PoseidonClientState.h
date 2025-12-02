@@ -15,19 +15,19 @@ class PoseidonClientState {
 public:
   PoseidonClientState() = default;
 
-  ~PoseidonClientState() = default;
+  virtual ~PoseidonClientState() = default;
 
-  virtual bool Get(StateCell &out, const std::string &keyword);
+  virtual bool Get(StateCell &out, const std::string &keyword) = 0;
 
-  virtual void Put(const StateCell &in, const std::string &keyword);
+  virtual void Put(const StateCell &in, const std::string &keyword) = 0;
 
-  virtual void Clear();
+  virtual void Clear() = 0;
 
-  virtual void DumpData(const std::string &dname = "poseidon_client_bak");
+  virtual void DumpData(const std::string &dname = "poseidon_client_bak") = 0;
 
-  virtual void LoadData(const std::string &dname = "poseidon_client_bak");
+  virtual void LoadData(const std::string &dname = "poseidon_client_bak") = 0;
 
-  virtual void GetKeywordsCnt(std::vector<int> &cnt);
+  virtual void GetKeywordsCnt(std::vector<int> &cnt) = 0;
 };
 
 #endif

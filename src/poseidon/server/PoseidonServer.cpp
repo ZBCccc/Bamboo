@@ -2,22 +2,17 @@
 #include "../../core/primitive.h"
 #include "relic/relic_ep.h"
 #include <cstdlib>
-#include <mutex>
 #include <string>
-#include <thread>
 #include <vector>
 
 #include <iostream>
 
 extern "C" {
-#include "unistd.h"
 #include <relic/relic.h>
 }
 
 using std::string;
 using std::vector;
-
-static std::mutex lock_cells;
 
 void PoseidonServer::Setup() { _storage->Clear(); }
 
@@ -96,7 +91,7 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
       }
       ep_sub(e_D, e_D, e_TD);
       ep_mul(e_D, e_D, d);
-      pi_inv(rand, e_C);
+      pi_inv(rand, e_D);
 
       ep_sub(e_C, e_C, e_TC);
       ep_write_bin(buf, 33, e_C, 1);
@@ -115,7 +110,7 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
       ep_mul(e_TD, e_TD, K);
       ep_write_bin(buf, 33, e_TD, 1);
       Td.assign((const char *)buf, 33);
-      
+
       Hash_G1(e_TC, rand);
       ep_mul(e_TC, e_TC, K);
       ep_write_bin(buf, 33, e_TC, 1);
@@ -125,9 +120,7 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
 
   int j = td.XTKL.size();
   string addr, valTrap, alphaTrap, lastTrap;
-  addr = td.STKL[0], 
-  valTrap = td.STKL[1],
-  alphaTrap = td.STKL[2],
+  addr = td.STKL[0], valTrap = td.STKL[1], alphaTrap = td.STKL[2],
   lastTrap = td.STKL[3];
   ep_t e_valTrap, e_alphaTrap, e_lastTrap;
   ep_new(e_valTrap);

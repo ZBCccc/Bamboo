@@ -1,8 +1,8 @@
-#ifndef PoseidonSERVER_H
-#define PoseidonSERVER_H
+#ifndef POSEIDON_SERVER_H
+#define POSEIDON_SERVER_H
 
 #include "../storage/ServerStorage.h"
-#include "../common/metadata.h"
+#include "../types/metadata.h"
 #include <memory>
 #include <string>
 #include <vector>
@@ -27,8 +27,6 @@ public:
 
   void KeyUpdate(const std::string &token);
 
-  void KeyUpdate_Parallel(const std::string &token, int num_threads);
-
   void DumpData(const std::string &name = "Backup");
 
   void LoadData(const std::string &name = "Backup");
@@ -36,8 +34,5 @@ public:
 private:
   std::unique_ptr<ServerStorage> _storage;
 };
-
-void do_KeyUpdate_in_parallel(std::vector<EDBCell> &cells, int number,
-                              std::string &delta, int num_threads);
 
 #endif

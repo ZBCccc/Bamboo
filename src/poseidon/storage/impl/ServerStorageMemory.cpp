@@ -41,9 +41,7 @@ void ServerStorageMemory::Put(const EDBCell &in) {
   xStorage_[in.xCell.L] = in.xCell;
 }
 
-void ServerStorageMemory::PutXSet(const string& xtag) {
-    xSet_.insert(xtag);
-}
+void ServerStorageMemory::PutXSet(const string &xtag) { xSet_.insert(xtag); }
 
 void ServerStorageMemory::PopAllT(std::vector<CDBCellT> &cip_all) {
   cip_all.clear();
@@ -55,16 +53,16 @@ void ServerStorageMemory::PopAllT(std::vector<CDBCellT> &cip_all) {
 }
 
 void ServerStorageMemory::PopX(CDBCellX &in_out) {
-    auto it = xStorage_.find(in_out.L);
-    if (it != xStorage_.end()) {
-        in_out.D = it->second.D;
-        in_out.C = it->second.C;
-        xStorage_.erase(it);
-    }
+  auto it = xStorage_.find(in_out.L);
+  if (it != xStorage_.end()) {
+    in_out.D = it->second.D;
+    in_out.C = it->second.C;
+    xStorage_.erase(it);
+  }
 }
 
 bool ServerStorageMemory::GetXSet(const std::string &xtag) {
-    return xSet_.find(xtag) != xSet_.end();
+  return xSet_.find(xtag) != xSet_.end();
 }
 
 void ServerStorageMemory::PopAllX(std::vector<CDBCellX> &cip_all) {
@@ -77,10 +75,10 @@ void ServerStorageMemory::PopAllX(std::vector<CDBCellX> &cip_all) {
 }
 
 void ServerStorageMemory::PopAllXSet(std::vector<std::string> &xtags) {
-    xtags.clear();
-    xtags.reserve(xSet_.size());
-    xtags.assign(xSet_.begin(), xSet_.end());
-    xSet_.clear();
+  xtags.clear();
+  xtags.reserve(xSet_.size());
+  xtags.assign(xSet_.begin(), xSet_.end());
+  xSet_.clear();
 }
 
 void ServerStorageMemory::PushBatchT(const std::vector<CDBCellT> &cip_all) {

@@ -17,9 +17,7 @@ extern "C" {
 }
 
 #include "../../core/primitive.h"
-#include "../common/metadata.h"
-
-using std::endl;
+#include "../types/metadata.h"
 
 extern double bench_clnt_time;
 extern unsigned int bench_bandwidth;
@@ -88,7 +86,7 @@ void SSEClient::prepare_dataset(
 
   for (const auto &itr : data_to_encrypt) {
     poseidon_client.BatchDataUpdate(metas, itr.first, itr.second, op);
-    std::cerr << "prepared keyword " << itr.first << endl;
+
     sock = _ConnectToServer();
     send(sock, &net_op, sizeof(int), 0);
     len = metas.size();
@@ -134,7 +132,7 @@ void SSEClient::Search(std::vector<std::string> &result,
                        const std::vector<std::string> &keywords) {
   TrapdoorMetadata trapdoor;
   int cnt_pad;
-  std::vector<std::string> cipher;
+  std::vector<ResMetadata> cipher;
   int cip_cnt, cnt_w, sock, stat;
   std::chrono::steady_clock::time_point begin, end;
   std::chrono::duration<double, std::micro> elapsed;
@@ -147,29 +145,58 @@ void SSEClient::Search(std::vector<std::string> &result,
   end = std::chrono::steady_clock::now();
   elapsed = end - begin;
   bench_clnt_time = elapsed.count();
+  std::cout << "Trapdoor generated in " << bench_clnt_time << " microseconds."
+       << std::endl;
 
   sock = _ConnectToServer();
   send(sock, &net_op, sizeof(int), 0);
 
-  K = Encrypt_data(K);
-  L = Encrypt_data(L);
-  MskD = Encrypt_data(MskD);
-  MskC = Encrypt_data(MskC);
+  int len = 0;
+  std::string K1 = Encrypt_data(trapdoor.K1);
+  send_bytes(sock, K1);
+  bench_bandwidth += K1.size();
 
-  send_bytes(sock, K);
-  send_bytes(sock, L);
-  send_bytes(sock, MskD);
-  send_bytes(sock, MskC);
+  len = trapdoor.TKL.size();
+  send(sock, &len, sizeof(int), 0);
+  for (auto tkl : trapdoor.TKL) {
+    std::string L = Encrypt_data(tkl.L);
+    std::string TD = Encrypt_data(tkl.TD);
+    std::string TC = Encrypt_data(tkl.TC);
+    send_bytes(sock, L);
+    send_bytes(sock, TD);
+    send_bytes(sock, TC);
+    bench_bandwidth += L.size() + TD.size() + TC.size();
+  }
 
-  bench_bandwidth += K.size() + L.size() + MskD.size() + MskC.size();
+  len = trapdoor.STKL.size();
+  send(sock, &len, sizeof(int), 0);
+  for (auto stkl : trapdoor.STKL) {
+    std::string stkl_enc = Encrypt_data(stkl);
+    send_bytes(sock, stkl_enc);
+    bench_bandwidth += stkl_enc.size();
+  }
+
+  len = trapdoor.XTKL.size();
+  send(sock, &len, sizeof(int), 0);
+  for (auto xtkl : trapdoor.XTKL) {
+    len = xtkl.size();
+    send(sock, &len, sizeof(int), 0);
+    for (auto stkl : xtkl) {
+      std::string stkl_enc = Encrypt_data(stkl);
+      send_bytes(sock, stkl_enc);
+      bench_bandwidth += stkl_enc.size();
+    }
+  }
 
   cip_cnt = 0;
-
+  cnt_w = trapdoor.XTKL.size();
+  std::string _tmp;
   for (int i = 0; i < A_MAX; i++) {
     recv_bytes(sock, _tmp);
+    recv(sock, &len, sizeof(int), 0);
     bench_bandwidth += _tmp.size();
     if (cip_cnt < cnt_w) {
-      cipher.emplace_back(Decrypt_data(_tmp));
+      cipher.emplace_back(ResMetadata{Decrypt_data(_tmp), len});
       cip_cnt++;
     }
   }
@@ -177,10 +204,12 @@ void SSEClient::Search(std::vector<std::string> &result,
   result.reserve(cnt_w);
 
   begin = std::chrono::steady_clock::now();
-  bamboo_client.DecryptResult(result, cipher, keyword);
+  poseidon_client.DecryptResult(result, cipher, keywords[0], keywords.size());
   end = std::chrono::steady_clock::now();
   elapsed = end - begin;
   bench_clnt_time += elapsed.count();
+  std::cout << "Decryption and result processing took " << elapsed.count()
+            << " microseconds." << std::endl;
 
   recv_data(sock, (unsigned char *)&stat, sizeof(int));
   close(sock);
@@ -197,7 +226,7 @@ void SSEClient::KeyUpdate(int thread_num) {
   InitializeKey();
 
   begin = std::chrono::steady_clock::now();
-  bamboo_client.KeyUpdate(utk);
+  poseidon_client.KeyUpdate(utk);
   end = std::chrono::steady_clock::now();
   elapsed = end - begin;
   bench_clnt_time = elapsed.count();
@@ -220,7 +249,7 @@ void SSEClient::BackupDB(const std::string &name) {
   send(sock, &net_op, sizeof(int), 0);
   send_bytes(sock, name);
 
-  bamboo_client.DumpData(std::string("SEKU_clnt_data_") + name);
+  poseidon_client.DumpData(std::string("Poseidon_SEKU_clnt_data_") + name);
   recv_data(sock, (unsigned char *)&stat, sizeof(int));
   close(sock);
 }
@@ -234,7 +263,7 @@ void SSEClient::LoadEDB(const std::string &name) {
   send(sock, &net_op, sizeof(int), 0);
   send_bytes(sock, name);
 
-  bamboo_client.LoadData(std::string("SEKU_clnt_data_") + name);
+  poseidon_client.LoadData(std::string("Poseidon_SEKU_clnt_data_") + name);
   recv_data(sock, (unsigned char *)&stat, sizeof(int));
   close(sock);
 }

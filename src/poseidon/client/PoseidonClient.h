@@ -9,7 +9,7 @@ extern "C" {
 #include <relic/relic.h>
 };
 
-#include "../common/metadata.h"
+#include "../types/metadata.h"
 #include "PoseidonClientState.h"
 
 #define USINGCONSTPAD
@@ -47,7 +47,7 @@ public:
 
 private:
   bn_t K1, K2, Kx, Ky, Kz;
-  PoseidonClientState state;
+  std::unique_ptr<PoseidonClientState> state;
 
   constexpr int SrchPadConst() { return Fpad; }
 

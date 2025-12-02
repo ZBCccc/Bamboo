@@ -9,7 +9,7 @@ class PoseidonClientStateMemory : public PoseidonClientState {
 public:
   PoseidonClientStateMemory() = default;
 
-  ~PoseidonClientStateMemory() = default;
+  ~PoseidonClientStateMemory() override = default;
 
   bool Get(StateCell &out, const std::string &keyword) override;
 

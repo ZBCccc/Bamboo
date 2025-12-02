@@ -1,9 +1,11 @@
 #include "PoseidonClient.h"
 #include "../../core/primitive.h"
+#include "PoseidonClientStateMemory.h"
 #include "relic/relic_ep.h"
 #include <iostream>
 #include <set>
 #include <string>
+#include <climits>
 
 extern "C" {
 #include <openssl/rand.h>
@@ -17,6 +19,8 @@ PoseidonClient::PoseidonClient() {
   bn_new(Kx);
   bn_new(Ky);
   bn_new(Kz);
+
+  state = std::make_unique<PoseidonClientStateMemory>();
 }
 
 PoseidonClient::~PoseidonClient() {
@@ -38,7 +42,7 @@ int PoseidonClient::Setup() {
   bn_rand_mod(Ky, ord);
   bn_rand_mod(Kz, ord);
 
-  this->state.Clear();
+  this->state->Clear();
 
   bn_clean(ord);
 
@@ -68,7 +72,7 @@ int PoseidonClient::DataUpdate(Metadata &meta, PoseidonOp op,
   ep_new(e_tmp);
   ep_new(e_tmp1);
 
-  if (!this->state.Get(cell, keyword)) {
+  if (!this->state->Get(cell, keyword)) {
     RAND_bytes(buf1, 16);
     cell.tk.assign((char *)buf1, 16);
     RAND_bytes(buf1, 16);
@@ -151,7 +155,7 @@ int PoseidonClient::DataUpdate(Metadata &meta, PoseidonOp op,
 
   cell.tk = tk1;
   cell.rand = rand1;
-  this->state.Put(cell, keyword);
+  this->state->Put(cell, keyword);
   ep_free(e_addr);
   ep_free(e_val);
   ep_free(e_lastAddr);
@@ -184,13 +188,13 @@ int PoseidonClient::Trapdoor(TrapdoorMetadata &td,
   ep_new(e_tmp);
 
   string w1 = keywords[0];
-  int cnt_w1 = 0;
+  int cnt_w1 = INT_MAX;
 
   // 找到出现次数最少的关键词
   int cnt;
   string tk, rand;
   for (auto &w : keywords) {
-    if (!this->state.Get(cell, w)) {
+    if (!this->state->Get(cell, w)) {
       return -1;
     }
 
@@ -229,7 +233,7 @@ int PoseidonClient::Trapdoor(TrapdoorMetadata &td,
     }
   }
 
-  this->state.Get(cell, w1);
+  this->state->Get(cell, w1);
   string tkw1 = cell.tk;
 
   Hash_H1(e_addr, tkw1);
@@ -247,8 +251,8 @@ int PoseidonClient::Trapdoor(TrapdoorMetadata &td,
   bn_write_bin(buf, 32, this->K1);
   td.K1.assign((char *)buf, 32);
 
-  ep_write_bin(buf, 33, e_addr, 1);
   string addr, val, last, alpha;
+  ep_write_bin(buf, 33, e_addr, 1);
   addr.assign((char *)buf, 33);
   td.STKL.push_back(addr);
 
@@ -309,7 +313,7 @@ int PoseidonClient::DecryptResult(std::vector<std::string> &plain_out,
   }
 
   StateCell cell;
-  if (!this->state.Get(cell, keyword)) {
+  if (!this->state->Get(cell, keyword)) {
     cerr << "Error: Keyword not found in state" << endl;
     return -1;
   }
@@ -348,7 +352,8 @@ int PoseidonClient::DecryptResult(std::vector<std::string> &plain_out,
     pi_inv(s1, ele);
 
     // 检查pi_inv是否成功返回有效字符串
-    if (s1.empty() || s1.size() < 2) { // 至少需要1字节操作符 + 1字节数据
+    if (s1.empty() || s1.size() < 2) {
+      // 至少需要1字节操作符 + 1字节数据
       cerr << "Warning: pi_inv returned invalid string at index " << i
            << ", skipping entry" << endl;
       continue;
@@ -423,7 +428,7 @@ void PoseidonClient::DumpData(const std::string &filename) {
   unsigned char buf[64];
   FILE *fkey;
 
-  this->state.DumpData(filename + ".db");
+  this->state->DumpData(filename + ".db");
 
   fkey = fopen((filename + "_priv_key").c_str(), "wb");
   bn_write_bin(buf, 32, K1);
@@ -444,7 +449,7 @@ void PoseidonClient::LoadData(const std::string &filename) {
   unsigned char buf[64];
   FILE *fkey;
 
-  this->state.LoadData(filename + ".db");
+  this->state->LoadData(filename + ".db");
 
   fkey = fopen((filename + "_priv_key").c_str(), "rb");
   fread(buf, sizeof(char), 32, fkey);
@@ -480,7 +485,7 @@ void PoseidonClient::BatchDataUpdate(vector<Metadata> &Metadatas,
   ep_new(e_tmp);
   ep_new(e_tmp1);
 
-  if (!this->state.Get(cell, keyword)) {
+  if (!this->state->Get(cell, keyword)) {
     RAND_bytes(buf1, 16);
     cell.tk.assign((char *)buf1, 16);
     RAND_bytes(buf1, 16);
@@ -569,7 +574,7 @@ void PoseidonClient::BatchDataUpdate(vector<Metadata> &Metadatas,
     cell.cntw += 1;
   }
 
-  this->state.Put(cell, keyword);
+  this->state->Put(cell, keyword);
 
   ep_free(e_addr);
   ep_free(e_val);
