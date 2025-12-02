@@ -1,5 +1,6 @@
 #include "PoseidonServer.h"
 #include "../../core/primitive.h"
+#include "relic/relic_core.h"
 #include "relic/relic_ep.h"
 #include <cstdlib>
 #include <string>
@@ -146,7 +147,7 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
   ep_new(e_alpha);
 
   int cnt;
-  int n = td.XTKL.size()+1;
+  int n = td.TKL.size() + 1;
   while (_storage->GetT(cellT)) {
     val = cellT.val;
     lastAddr = cellT.lastAddr;
@@ -167,7 +168,7 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
     ep_t e_xtk;
     ep_new(e_xtk);
     for (int k = 2; k <= n; k++) {
-      xtk = td.XTKL[j-1][k-2];
+      xtk = td.XTKL[j - 1][k - 2];
       try {
         ep_read_bin(e_xtk, (const unsigned char *)xtk.c_str(), 33);
       } catch (const std::exception &e) {
@@ -180,6 +181,8 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
         cnt++;
       }
     }
+
+    ep_free(e_xtk);
 
     ep_sub(e_val, e_val, e_valTrap);
     ep_write_bin(buf, 33, e_val, 1);
@@ -226,8 +229,8 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
   ep_free(e_alphaTrap);
   ep_free(e_lastTrap);
   ep_free(e_addr);
-  ep_free(e_xtk);
 
+  core_clean();
   return;
 }
 

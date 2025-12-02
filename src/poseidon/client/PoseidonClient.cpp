@@ -2,10 +2,11 @@
 #include "../../core/primitive.h"
 #include "PoseidonClientStateMemory.h"
 #include "relic/relic_ep.h"
+#include <climits>
 #include <iostream>
 #include <set>
 #include <string>
-#include <climits>
+#include <algorithm>
 
 extern "C" {
 #include <openssl/rand.h>
@@ -174,7 +175,6 @@ int PoseidonClient::Trapdoor(TrapdoorMetadata &td,
   unsigned char buf[64];
   StateCell cell;
   string s;
-  int mid;
   ep_t e_L, e_xtk, e_TD, e_TC, e_addr, e_val, e_alpha, e_last, e_tmp;
 
   ep_new(e_L);
@@ -323,6 +323,8 @@ int PoseidonClient::DecryptResult(std::vector<std::string> &plain_out,
     return 0;
   }
 
+  core_init();
+  ep_param_set(NIST_P256);
   ep_t ele;
   bn_t c, d, e, ord;
   ep_new(ele);
@@ -338,9 +340,10 @@ int PoseidonClient::DecryptResult(std::vector<std::string> &plain_out,
   std::set<string> tmp;
   string s1, s2;
 
-  for (int i = 1; i <= cell.cntw; i++) {
-    const string &val = res_in[i].val;
-    int cnt = res_in[i].cnt;
+  for (auto it = res_in.rbegin(); it != res_in.rend(); it++) {
+    const string &val = it->val;
+    int cnt = it->cnt;
+    // cout << "cnt: " << cnt << endl;
 
     // 读取椭圆曲线点
     ep_read_bin(ele, (const unsigned char *)val.c_str(), 33);
@@ -354,7 +357,7 @@ int PoseidonClient::DecryptResult(std::vector<std::string> &plain_out,
     // 检查pi_inv是否成功返回有效字符串
     if (s1.empty() || s1.size() < 2) {
       // 至少需要1字节操作符 + 1字节数据
-      cerr << "Warning: pi_inv returned invalid string at index " << i
+      cerr << "Warning: pi_inv returned invalid string at index "
            << ", skipping entry" << endl;
       continue;
     }
@@ -364,7 +367,7 @@ int PoseidonClient::DecryptResult(std::vector<std::string> &plain_out,
     s2.assign(s1.begin() + 1, s1.end());
 
     // 根据操作符处理结果
-    if (op == '1' && cnt == n) {
+    if (op == '1' && cnt == n-1) {
       // 添加操作且计数匹配
       tmp.emplace(s2);
     } else if (op == '0' && cnt > 0) {
