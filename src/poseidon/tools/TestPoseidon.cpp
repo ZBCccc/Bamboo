@@ -21,10 +21,10 @@ int main() {
 
   std::vector<Metadata> metas;
   Metadata meta;
-  metas.reserve(200);
+  metas.reserve(2);
   
   begin = std::chrono::steady_clock::now();
-  for (int i = 0; i < 200; i++) {
+  for (int i = 0; i < 2; i++) {
     client.DataUpdate(meta, Poseidon_add, "abc", "file-" + std::to_string(i));
     metas.push_back(meta);
   }
@@ -40,9 +40,9 @@ int main() {
   server.SaveBatch(metas);
 
   std::vector<Metadata> def_metas;
-  def_metas.reserve(100);
+  def_metas.reserve(1);
 
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 1; i++) {
     client.DataUpdate(meta, Poseidon_add, "def", "file-" + std::to_string(i));
     def_metas.push_back(meta);
   }

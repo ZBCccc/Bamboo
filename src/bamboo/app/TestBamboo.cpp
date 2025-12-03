@@ -1,5 +1,5 @@
-#include "../client/PoseidonClient.h"
-#include "../server/PoseidonServer.h"
+#include "../client/BambooClient.h"
+#include "../server/BambooServer.h"
 #include "../storage/impl/ServerStorageMemory.h"
 #include <chrono>
 #include <iomanip>
@@ -30,11 +30,16 @@ public:
     std::cout << std::left << std::setw(40) << "Operation" << std::right
               << std::setw(15) << "Total (us)" << std::setw(10) << "Count"
               << std::setw(15) << "Avg (us)" << std::setw(12) << "Percentage"
-              << std::endl;
-    std::cout << std::string(92, '-') << std::endl;
+              << "\n";
+    std::cout << std::string(92, '-') << "\n";
 
     double total = 0;
     for (const auto &[name, time] : results) {
+      // Only sum up "Client::" and "Server::" operations to avoid double
+      // counting parent/child scopes or just sum everything. The user's
+      // original code summed everything. Let's stick to summing everything for
+      // percentage calculation to match previous behavior, although it might be
+      // misleading if scopes overlap.
       total += time;
     }
 
@@ -45,12 +50,12 @@ public:
                 << std::setw(10) << counts[name] << std::setw(15) << std::fixed
                 << std::setprecision(2) << avg << std::setw(11)
                 << std::setprecision(2)
-                << (total > 0 ? (time / total * 100) : 0) << "%" << std::endl;
+                << (total > 0 ? (time / total * 100) : 0) << "%" << "\n";
     }
-    std::cout << std::string(92, '-') << std::endl;
+    std::cout << std::string(92, '-') << "\n";
     std::cout << std::left << std::setw(40) << "TOTAL" << std::right
               << std::setw(15) << std::fixed << std::setprecision(2) << total
-              << std::endl;
+              << "\n";
     std::cout << "==================================================\n";
   }
 
@@ -74,7 +79,7 @@ int main() {
 
   // Server setup
   PerformanceProfiler::start("Server::Setup");
-  PoseidonServer server;
+  BambooServer server;
   auto storage = std::make_unique<ServerStorageMemory>();
   server.SetStorage(std::move(storage));
   server.Setup();
@@ -82,57 +87,68 @@ int main() {
 
   // Client setup
   PerformanceProfiler::start("Client::Setup");
-  PoseidonClient client;
+  BambooClient client;
   client.Setup();
   PerformanceProfiler::end("Client::Setup");
 
-  std::vector<Metadata> metas;
-  Metadata meta;
-  metas.reserve(2);
+  std::vector<std::string> Ls, Ds, Cs;
+  Ls.reserve(300);
+  Ds.reserve(300);
+  Cs.reserve(300);
 
   // DataUpdate phase
-  PerformanceProfiler::start("DataUpdate (2 records)");
-  for (int i = 0; i < 2; i++) {
+  PerformanceProfiler::start("DataUpdate (200 records)");
+  for (int i = 0; i < 200; i++) {
+    std::string L, D, C;
     PerformanceProfiler::start("Client::DataUpdate (single)");
-    client.DataUpdate(meta, Poseidon_add, "abc", "file-" + std::to_string(i));
+    client.DataUpdate(L, D, C, Bamboo_add, "abc", "file-" + std::to_string(i));
     PerformanceProfiler::end("Client::DataUpdate (single)");
-    metas.push_back(meta);
+    Ls.emplace_back(std::move(L));
+    Ds.emplace_back(std::move(D));
+    Cs.emplace_back(std::move(C));
   }
-  PerformanceProfiler::end("DataUpdate (2 records)");
+  PerformanceProfiler::end("DataUpdate (200 records)");
 
   // SaveBatch
   PerformanceProfiler::start("Server::SaveBatch");
-  server.SaveBatch(metas);
+  server.SaveBatch(Ls, Ds, Cs);
   PerformanceProfiler::end("Server::SaveBatch");
 
-  std::vector<Metadata> def_metas;
-  def_metas.reserve(1);
+  Ls.clear();
+  Ds.clear();
+  Cs.clear();
 
-  PerformanceProfiler::start("DataUpdate additional (1 record)");
-  for (int i = 0; i < 1; i++) {
-    client.DataUpdate(meta, Poseidon_add, "def", "file-" + std::to_string(i));
-    def_metas.push_back(meta);
+  PerformanceProfiler::start("DataUpdate additional (100 records)");
+  for (int i = 0; i < 100; i++) {
+    std::string L, D, C;
+    PerformanceProfiler::start("Client::DataUpdate (single)");
+    client.DataUpdate(L, D, C, Bamboo_add, "def", "file-" + std::to_string(i));
+    PerformanceProfiler::end("Client::DataUpdate (single)");
+    Ls.emplace_back(std::move(L));
+    Ds.emplace_back(std::move(D));
+    Cs.emplace_back(std::move(C));
   }
-  PerformanceProfiler::end("DataUpdate additional (1 record)");
+  PerformanceProfiler::end("DataUpdate additional (100 records)");
 
   PerformanceProfiler::start("Server::SaveBatch (additional)");
-  server.SaveBatch(def_metas);
+  server.SaveBatch(Ls, Ds, Cs);
   PerformanceProfiler::end("Server::SaveBatch (additional)");
 
   // Search phase
   PerformanceProfiler::start("Client::Trapdoor");
-  TrapdoorMetadata td;
-  client.Trapdoor(td, std::vector<std::string>({"def", "abc"}));
+  std::string K_out, L, MskD, MskC;
+  int cnt_w = 0;
+  client.Trapdoor(K_out, L, MskD, MskC, "def", cnt_w);
   PerformanceProfiler::end("Client::Trapdoor");
 
   PerformanceProfiler::start("Server::Search");
-  std::vector<ResMetadata> res;
-  server.Search(res, td);
+  std::vector<std::string> res;
+  server.Search(res, K_out, L, MskD, MskC);
   PerformanceProfiler::end("Server::Search");
 
   PerformanceProfiler::start("Client::DecryptResult");
   std::vector<std::string> plain_out;
-  client.DecryptResult(plain_out, res, "def", 2);
+  client.DecryptResult(plain_out, res, "def");
   PerformanceProfiler::end("Client::DecryptResult");
 
   // Print results

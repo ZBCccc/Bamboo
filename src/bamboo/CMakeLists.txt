@@ -61,3 +61,12 @@ add_executable(Bamboo-SERVER
 target_link_libraries(Bamboo-SERVER
     bamboo_server
 )
+
+add_executable(Bamboo-TEST
+    app/TestBamboo.cpp
+)
+
+target_link_libraries(Bamboo-TEST
+    bamboo_client
+    bamboo_server
+)

@@ -148,6 +148,8 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
 
   int cnt;
   int n = td.TKL.size() + 1;
+  ep_t e_xtk;
+  ep_new(e_xtk);
   while (_storage->GetT(cellT)) {
     val = cellT.val;
     lastAddr = cellT.lastAddr;
@@ -165,8 +167,7 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
     cnt = 1;
 
     string xtk, xtagjk;
-    ep_t e_xtk;
-    ep_new(e_xtk);
+    
     for (int k = 2; k <= n; k++) {
       xtk = td.XTKL[j - 1][k - 2];
       try {
@@ -181,8 +182,6 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
         cnt++;
       }
     }
-
-    ep_free(e_xtk);
 
     ep_sub(e_val, e_val, e_valTrap);
     ep_write_bin(buf, 33, e_val, 1);
@@ -212,6 +211,7 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
     j--;
   }
 
+  ep_free(e_xtk);
   bn_free(c);
   bn_free(e);
   bn_free(d);
