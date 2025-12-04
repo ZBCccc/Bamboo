@@ -15,6 +15,59 @@ extern "C" {
 using std::string;
 using std::vector;
 
+PoseidonServer::PoseidonServer() {
+  core_init();
+  ep_param_set(NIST_P256);
+
+  bn_new(K);
+  bn_new(c);
+  bn_new(e);
+  bn_new(d);
+  bn_new(ord);
+
+  ep_new(e_L);
+  ep_new(e_TD);
+  ep_new(e_TC);
+  ep_new(e_C);
+  ep_new(e_D);
+
+  ep_new(e_valTrap);
+  ep_new(e_alphaTrap);
+  ep_new(e_lastTrap);
+
+  ep_new(e_addr);
+  ep_new(e_val);
+  ep_new(e_lastAddr);
+  ep_new(e_alpha);
+  ep_new(e_xtk);
+}
+
+PoseidonServer::~PoseidonServer() {
+  bn_free(K);
+  bn_free(c);
+  bn_free(e);
+  bn_free(d);
+  bn_free(ord);
+
+  ep_free(e_L);
+  ep_free(e_TD);
+  ep_free(e_TC);
+  ep_free(e_C);
+  ep_free(e_D);
+
+  ep_free(e_valTrap);
+  ep_free(e_alphaTrap);
+  ep_free(e_lastTrap);
+
+  ep_free(e_addr);
+  ep_free(e_val);
+  ep_free(e_lastAddr);
+  ep_free(e_alpha);
+  ep_free(e_xtk);
+
+  core_clean(); // Removed to allow multiple objects to coexist
+}
+
 void PoseidonServer::Setup() { _storage->Clear(); }
 
 void PoseidonServer::Save(const Metadata &meta) {
@@ -45,25 +98,6 @@ void PoseidonServer::SaveBatch(const std::vector<Metadata> &Metadatas) {
 
 void PoseidonServer::Search(std::vector<ResMetadata> &result,
                             const TrapdoorMetadata &td) {
-  bn_t K, c, e, d, ord;
-  ep_t e_L, e_TD, e_TC, e_C, e_D;
-  unsigned char buf[128];
-
-  core_init();
-  ep_param_set(NIST_P256);
-
-  bn_new(c);
-  bn_new(e);
-  bn_new(d);
-  bn_new(ord);
-  bn_new(K);
-
-  ep_new(e_L);
-  ep_new(e_TD);
-  ep_new(e_TC);
-  ep_new(e_C);
-  ep_new(e_D);
-
   ep_curve_get_ord(ord);
 
   bn_read_bin(K, (const unsigned char *)td.K1.c_str(), 32);
@@ -123,10 +157,6 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
   string addr, valTrap, alphaTrap, lastTrap;
   addr = td.STKL[0], valTrap = td.STKL[1], alphaTrap = td.STKL[2],
   lastTrap = td.STKL[3];
-  ep_t e_valTrap, e_alphaTrap, e_lastTrap;
-  ep_new(e_valTrap);
-  ep_new(e_alphaTrap);
-  ep_new(e_lastTrap);
 
   try {
     ep_read_bin(e_valTrap, (const unsigned char *)valTrap.c_str(), 33);
@@ -140,16 +170,9 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
   cellT.addr = addr;
 
   string val, lastAddr, alpha;
-  ep_t e_addr, e_val, e_lastAddr, e_alpha;
-  ep_new(e_addr);
-  ep_new(e_val);
-  ep_new(e_lastAddr);
-  ep_new(e_alpha);
 
   int cnt;
   int n = td.TKL.size() + 1;
-  ep_t e_xtk;
-  ep_new(e_xtk);
   while (_storage->GetT(cellT)) {
     val = cellT.val;
     lastAddr = cellT.lastAddr;
@@ -167,7 +190,7 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
     cnt = 1;
 
     string xtk, xtagjk;
-    
+
     for (int k = 2; k <= n; k++) {
       xtk = td.XTKL[j - 1][k - 2];
       try {
@@ -210,62 +233,35 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
 
     j--;
   }
-
-  ep_free(e_xtk);
-  bn_free(c);
-  bn_free(e);
-  bn_free(d);
-  bn_free(ord);
-  bn_free(K);
-  ep_free(e_L);
-  ep_free(e_TD);
-  ep_free(e_TC);
-  ep_free(e_C);
-  ep_free(e_D);
-  ep_free(e_val);
-  ep_free(e_lastAddr);
-  ep_free(e_alpha);
-  ep_free(e_valTrap);
-  ep_free(e_alphaTrap);
-  ep_free(e_lastTrap);
-  ep_free(e_addr);
-
-  core_clean();
   return;
 }
 
 void PoseidonServer::KeyUpdate(const string &token) {
   vector<CDBCellT> ciphers;
-  bn_t d;
-  ep_t ele1;
-  unsigned char buf[128];
-
-  bn_new(d);
-  ep_new(ele1);
 
   bn_read_bin(d, (const unsigned char *)token.c_str(), 32);
 
   _storage->PopAllT(ciphers);
 
   for (CDBCellT &cell : ciphers) {
-    ep_read_bin(ele1, (const unsigned char *)cell.addr.c_str(), 33);
-    ep_mul(ele1, ele1, d);
-    ep_write_bin(buf, 33, ele1, 1);
+    ep_read_bin(e_addr, (const unsigned char *)cell.addr.c_str(), 33);
+    ep_mul(e_addr, e_addr, d);
+    ep_write_bin(buf, 33, e_addr, 1);
     cell.addr.assign((const char *)buf, 33);
 
-    ep_read_bin(ele1, (const unsigned char *)cell.val.c_str(), 33);
-    ep_mul(ele1, ele1, d);
-    ep_write_bin(buf, 33, ele1, 1);
+    ep_read_bin(e_addr, (const unsigned char *)cell.val.c_str(), 33);
+    ep_mul(e_addr, e_addr, d);
+    ep_write_bin(buf, 33, e_addr, 1);
     cell.val.assign((char *)buf, 33);
 
-    ep_read_bin(ele1, (const unsigned char *)cell.lastAddr.c_str(), 33);
-    ep_mul(ele1, ele1, d);
-    ep_write_bin(buf, 33, ele1, 1);
+    ep_read_bin(e_addr, (const unsigned char *)cell.lastAddr.c_str(), 33);
+    ep_mul(e_addr, e_addr, d);
+    ep_write_bin(buf, 33, e_addr, 1);
     cell.lastAddr.assign((char *)buf, 33);
 
-    ep_read_bin(ele1, (const unsigned char *)cell.alpha.c_str(), 33);
-    ep_mul(ele1, ele1, d);
-    ep_write_bin(buf, 33, ele1, 1);
+    ep_read_bin(e_addr, (const unsigned char *)cell.alpha.c_str(), 33);
+    ep_mul(e_addr, e_addr, d);
+    ep_write_bin(buf, 33, e_addr, 1);
     cell.alpha.assign((char *)buf, 33);
   }
 
@@ -275,26 +271,23 @@ void PoseidonServer::KeyUpdate(const string &token) {
   _storage->PopAllX(xCells);
 
   for (CDBCellX &cell : xCells) {
-    ep_read_bin(ele1, (const unsigned char *)cell.L.c_str(), 33);
-    ep_mul(ele1, ele1, d);
-    ep_write_bin(buf, 33, ele1, 1);
+    ep_read_bin(e_addr, (const unsigned char *)cell.L.c_str(), 33);
+    ep_mul(e_addr, e_addr, d);
+    ep_write_bin(buf, 33, e_addr, 1);
     cell.L.assign((const char *)buf, 33);
 
-    ep_read_bin(ele1, (const unsigned char *)cell.D.c_str(), 33);
-    ep_mul(ele1, ele1, d);
-    ep_write_bin(buf, 33, ele1, 1);
+    ep_read_bin(e_addr, (const unsigned char *)cell.D.c_str(), 33);
+    ep_mul(e_addr, e_addr, d);
+    ep_write_bin(buf, 33, e_addr, 1);
     cell.D.assign((const char *)buf, 33);
 
-    ep_read_bin(ele1, (const unsigned char *)cell.C.c_str(), 33);
-    ep_mul(ele1, ele1, d);
-    ep_write_bin(buf, 33, ele1, 1);
+    ep_read_bin(e_addr, (const unsigned char *)cell.C.c_str(), 33);
+    ep_mul(e_addr, e_addr, d);
+    ep_write_bin(buf, 33, e_addr, 1);
     cell.C.assign((const char *)buf, 33);
   }
 
   _storage->PushBatchX(xCells);
-
-  bn_free(d);
-  ep_free(ele1);
 
   return;
 }

@@ -49,6 +49,11 @@ private:
   bn_t K1, K2, Kx, Ky, Kz;
   std::unique_ptr<PoseidonClientState> state;
 
+  // Temporary variables for optimization
+  ep_t e_addr, e_val, e_lastAddr, e_alpha, e_L, e_D, e_C, e_tmp, e_tmp1;
+  ep_t e_xtk, e_TD, e_TC, e_last;
+  unsigned char buf[64];
+
   constexpr int SrchPadConst() { return Fpad; }
 
   int SrchPadExp();

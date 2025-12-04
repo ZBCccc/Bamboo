@@ -134,6 +134,16 @@ int main() {
   server.SaveBatch(Ls, Ds, Cs);
   PerformanceProfiler::end("Server::SaveBatch (additional)");
 
+  // KeyUpdate phase
+  std::string delta;
+  PerformanceProfiler::start("Client::KeyUpdate");
+  client.KeyUpdate(delta);
+  PerformanceProfiler::end("Client::KeyUpdate");
+
+  PerformanceProfiler::start("Server::KeyUpdate");
+  server.KeyUpdate(delta);
+  PerformanceProfiler::end("Server::KeyUpdate");
+
   // Search phase
   PerformanceProfiler::start("Client::Trapdoor");
   std::string K_out, L, MskD, MskC;

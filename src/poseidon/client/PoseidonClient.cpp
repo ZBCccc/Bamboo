@@ -6,7 +6,6 @@
 #include <iostream>
 #include <set>
 #include <string>
-#include <algorithm>
 
 extern "C" {
 #include <openssl/rand.h>
@@ -21,6 +20,20 @@ PoseidonClient::PoseidonClient() {
   bn_new(Ky);
   bn_new(Kz);
 
+  ep_new(e_addr);
+  ep_new(e_val);
+  ep_new(e_lastAddr);
+  ep_new(e_alpha);
+  ep_new(e_L);
+  ep_new(e_D);
+  ep_new(e_C);
+  ep_new(e_tmp);
+  ep_new(e_tmp1);
+  ep_new(e_xtk);
+  ep_new(e_TD);
+  ep_new(e_TC);
+  ep_new(e_last);
+
   state = std::make_unique<PoseidonClientStateMemory>();
 }
 
@@ -30,6 +43,20 @@ PoseidonClient::~PoseidonClient() {
   bn_clean(Kx);
   bn_clean(Ky);
   bn_clean(Kz);
+
+  ep_free(e_addr);
+  ep_free(e_val);
+  ep_free(e_lastAddr);
+  ep_free(e_alpha);
+  ep_free(e_L);
+  ep_free(e_D);
+  ep_free(e_C);
+  ep_free(e_tmp);
+  ep_free(e_tmp1);
+  ep_free(e_xtk);
+  ep_free(e_TD);
+  ep_free(e_TC);
+  ep_free(e_last);
 }
 
 int PoseidonClient::Setup() {
@@ -59,33 +86,21 @@ int PoseidonClient::DataUpdate(Metadata &meta, PoseidonOp op,
   }
 
   StateCell cell;
-  unsigned char buf1[64];
   string tk1, rand1, s;
-  ep_t e_addr, e_val, e_lastAddr, e_alpha, e_L, e_D, e_C, e_tmp, e_tmp1;
-
-  ep_new(e_addr);
-  ep_new(e_val);
-  ep_new(e_lastAddr);
-  ep_new(e_alpha);
-  ep_new(e_L);
-  ep_new(e_D);
-  ep_new(e_C);
-  ep_new(e_tmp);
-  ep_new(e_tmp1);
 
   if (!this->state->Get(cell, keyword)) {
-    RAND_bytes(buf1, 16);
-    cell.tk.assign((char *)buf1, 16);
-    RAND_bytes(buf1, 16);
-    cell.rand.assign((char *)buf1, 16);
+    RAND_bytes(buf, 16);
+    cell.tk.assign((char *)buf, 16);
+    RAND_bytes(buf, 16);
+    cell.rand.assign((char *)buf, 16);
     cell.cntw = 0;
   }
   cell.cntw += 1;
 
-  RAND_bytes(buf1, 16);
-  tk1.assign((char *)buf1, 16);
-  RAND_bytes(buf1, 16);
-  rand1.assign((char *)buf1, 16);
+  RAND_bytes(buf, 16);
+  tk1.assign((char *)buf, 16);
+  RAND_bytes(buf, 16);
+  rand1.assign((char *)buf, 16);
 
   Hash_H1(e_addr, tk1);
   ep_mul(e_addr, e_addr, this->K1);
@@ -133,59 +148,38 @@ int PoseidonClient::DataUpdate(Metadata &meta, PoseidonOp op,
   ep_add(e_D, e_tmp, e_D);
   ep_mul(e_D, e_D, this->K1);
 
-  ep_write_bin(buf1, 33, e_addr, 1);
-  meta.addr.assign((char *)buf1, 33);
+  ep_write_bin(buf, 33, e_addr, 1);
+  meta.addr.assign((char *)buf, 33);
 
-  ep_write_bin(buf1, 33, e_val, 1);
-  meta.val.assign((char *)buf1, 33);
+  ep_write_bin(buf, 33, e_val, 1);
+  meta.val.assign((char *)buf, 33);
 
-  ep_write_bin(buf1, 33, e_lastAddr, 1);
-  meta.lastAddr.assign((char *)buf1, 33);
+  ep_write_bin(buf, 33, e_lastAddr, 1);
+  meta.lastAddr.assign((char *)buf, 33);
 
-  ep_write_bin(buf1, 33, e_alpha, 1);
-  meta.alpha.assign((char *)buf1, 33);
+  ep_write_bin(buf, 33, e_alpha, 1);
+  meta.alpha.assign((char *)buf, 33);
 
-  ep_write_bin(buf1, 33, e_L, 1);
-  meta.L.assign((char *)buf1, 33);
+  ep_write_bin(buf, 33, e_L, 1);
+  meta.L.assign((char *)buf, 33);
 
-  ep_write_bin(buf1, 33, e_D, 1);
-  meta.D.assign((char *)buf1, 33);
+  ep_write_bin(buf, 33, e_D, 1);
+  meta.D.assign((char *)buf, 33);
 
-  ep_write_bin(buf1, 33, e_C, 1);
-  meta.C.assign((char *)buf1, 33);
+  ep_write_bin(buf, 33, e_C, 1);
+  meta.C.assign((char *)buf, 33);
 
   cell.tk = tk1;
   cell.rand = rand1;
   this->state->Put(cell, keyword);
-  ep_free(e_addr);
-  ep_free(e_val);
-  ep_free(e_lastAddr);
-  ep_free(e_alpha);
-  ep_free(e_L);
-  ep_free(e_D);
-  ep_free(e_C);
-  ep_free(e_tmp);
-  ep_free(e_tmp1);
 
   return 0;
 }
 
 int PoseidonClient::Trapdoor(TrapdoorMetadata &td,
                              const std::vector<std::string> &keywords) {
-  unsigned char buf[64];
   StateCell cell;
   string s;
-  ep_t e_L, e_xtk, e_TD, e_TC, e_addr, e_val, e_alpha, e_last, e_tmp;
-
-  ep_new(e_L);
-  ep_new(e_xtk);
-  ep_new(e_TD);
-  ep_new(e_TC);
-  ep_new(e_addr);
-  ep_new(e_val);
-  ep_new(e_alpha);
-  ep_new(e_last);
-  ep_new(e_tmp);
 
   string w1 = keywords[0];
   int cnt_w1 = INT_MAX;
@@ -367,7 +361,7 @@ int PoseidonClient::DecryptResult(std::vector<std::string> &plain_out,
     s2.assign(s1.begin() + 1, s1.end());
 
     // 根据操作符处理结果
-    if (op == '1' && cnt == n-1) {
+    if (op == '1' && cnt == n - 1) {
       // 添加操作且计数匹配
       tmp.emplace(s2);
     } else if (op == '0' && cnt > 0) {
@@ -474,34 +468,22 @@ void PoseidonClient::BatchDataUpdate(vector<Metadata> &Metadatas,
                                      const vector<std::string> &ids,
                                      PoseidonOp op) {
   StateCell cell;
-  unsigned char buf1[64];
   string tk1, s, rand1;
-  ep_t e_addr, e_val, e_lastAddr, e_alpha, e_L, e_D, e_C, e_tmp, e_tmp1;
-
-  ep_new(e_addr);
-  ep_new(e_val);
-  ep_new(e_lastAddr);
-  ep_new(e_alpha);
-  ep_new(e_L);
-  ep_new(e_D);
-  ep_new(e_C);
-  ep_new(e_tmp);
-  ep_new(e_tmp1);
 
   if (!this->state->Get(cell, keyword)) {
-    RAND_bytes(buf1, 16);
-    cell.tk.assign((char *)buf1, 16);
-    RAND_bytes(buf1, 16);
-    cell.rand.assign((char *)buf1, 16);
+    RAND_bytes(buf, 16);
+    cell.tk.assign((char *)buf, 16);
+    RAND_bytes(buf, 16);
+    cell.rand.assign((char *)buf, 16);
     cell.cntw = 0;
   }
   cell.cntw += 1;
 
   for (const auto &id : ids) {
-    RAND_bytes(buf1, 16);
-    tk1.assign((char *)buf1, 16);
-    RAND_bytes(buf1, 16);
-    rand1.assign((char *)buf1, 16);
+    RAND_bytes(buf, 16);
+    tk1.assign((char *)buf, 16);
+    RAND_bytes(buf, 16);
+    rand1.assign((char *)buf, 16);
 
     Hash_H1(e_addr, tk1);
     ep_mul(e_addr, e_addr, this->K1);
@@ -550,26 +532,26 @@ void PoseidonClient::BatchDataUpdate(vector<Metadata> &Metadatas,
     ep_mul(e_D, e_D, this->K1);
 
     Metadata meta;
-    ep_write_bin(buf1, 33, e_addr, 1);
-    meta.addr.assign((char *)buf1, 33);
+    ep_write_bin(buf, 33, e_addr, 1);
+    meta.addr.assign((char *)buf, 33);
 
-    ep_write_bin(buf1, 33, e_val, 1);
-    meta.val.assign((char *)buf1, 33);
+    ep_write_bin(buf, 33, e_val, 1);
+    meta.val.assign((char *)buf, 33);
 
-    ep_write_bin(buf1, 33, e_lastAddr, 1);
-    meta.lastAddr.assign((char *)buf1, 33);
+    ep_write_bin(buf, 33, e_lastAddr, 1);
+    meta.lastAddr.assign((char *)buf, 33);
 
-    ep_write_bin(buf1, 33, e_alpha, 1);
-    meta.alpha.assign((char *)buf1, 33);
+    ep_write_bin(buf, 33, e_alpha, 1);
+    meta.alpha.assign((char *)buf, 33);
 
-    ep_write_bin(buf1, 33, e_L, 1);
-    meta.L.assign((char *)buf1, 33);
+    ep_write_bin(buf, 33, e_L, 1);
+    meta.L.assign((char *)buf, 33);
 
-    ep_write_bin(buf1, 33, e_D, 1);
-    meta.D.assign((char *)buf1, 33);
+    ep_write_bin(buf, 33, e_D, 1);
+    meta.D.assign((char *)buf, 33);
 
-    ep_write_bin(buf1, 33, e_C, 1);
-    meta.C.assign((char *)buf1, 33);
+    ep_write_bin(buf, 33, e_C, 1);
+    meta.C.assign((char *)buf, 33);
 
     Metadatas.emplace_back(meta);
 
@@ -578,14 +560,4 @@ void PoseidonClient::BatchDataUpdate(vector<Metadata> &Metadatas,
   }
 
   this->state->Put(cell, keyword);
-
-  ep_free(e_addr);
-  ep_free(e_val);
-  ep_free(e_lastAddr);
-  ep_free(e_alpha);
-  ep_free(e_L);
-  ep_free(e_D);
-  ep_free(e_C);
-  ep_free(e_tmp);
-  ep_free(e_tmp1);
 }

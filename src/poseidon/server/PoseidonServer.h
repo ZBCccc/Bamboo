@@ -7,11 +7,15 @@
 #include <string>
 #include <vector>
 
+extern "C" {
+#include <relic/relic.h>
+};
+
 class PoseidonServer {
 public:
-  PoseidonServer() = default;
+  PoseidonServer();
 
-  ~PoseidonServer() = default;
+  ~PoseidonServer();
 
   void SetStorage(std::unique_ptr<ServerStorage> cdb) {
     _storage = std::move(cdb);
@@ -33,6 +37,15 @@ public:
 
 private:
   std::unique_ptr<ServerStorage> _storage;
+
+  // Temporary variables for optimization
+  bn_t K, c, e, d, ord;
+  ep_t e_L, e_TD, e_TC, e_C, e_D;
+  ep_t e_valTrap, e_alphaTrap, e_lastTrap;
+  ep_t e_addr, e_val, e_lastAddr, e_alpha;
+  ep_t e_xtk;
+  // Buffer for serialization
+  unsigned char buf[128];
 };
 
 #endif

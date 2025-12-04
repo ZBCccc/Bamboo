@@ -66,6 +66,11 @@ std::unordered_map<std::string, high_resolution_clock::time_point>
 std::unordered_map<std::string, double> PerformanceProfiler::results;
 std::unordered_map<std::string, int> PerformanceProfiler::counts;
 
+size_t getMetadataSize(const Metadata &meta) {
+  return meta.addr.size() + meta.val.size() + meta.lastAddr.size() +
+         meta.alpha.size() + meta.L.size() + meta.D.size() + meta.C.size();
+}
+
 int main() {
   core_init();
   ep_param_set(NIST_P256);
@@ -88,17 +93,20 @@ int main() {
 
   std::vector<Metadata> metas;
   Metadata meta;
-  metas.reserve(2);
+  metas.reserve(200);
 
   // DataUpdate phase
-  PerformanceProfiler::start("DataUpdate (2 records)");
-  for (int i = 0; i < 2; i++) {
+  size_t total_meta_size = 0;
+  PerformanceProfiler::start("DataUpdate (200 records)");
+  for (int i = 0; i < 200; i++) {
     PerformanceProfiler::start("Client::DataUpdate (single)");
     client.DataUpdate(meta, Poseidon_add, "abc", "file-" + std::to_string(i));
     PerformanceProfiler::end("Client::DataUpdate (single)");
+
+    total_meta_size += getMetadataSize(meta);
     metas.push_back(meta);
   }
-  PerformanceProfiler::end("DataUpdate (2 records)");
+  PerformanceProfiler::end("DataUpdate (200 records)");
 
   // SaveBatch
   PerformanceProfiler::start("Server::SaveBatch");
@@ -106,18 +114,29 @@ int main() {
   PerformanceProfiler::end("Server::SaveBatch");
 
   std::vector<Metadata> def_metas;
-  def_metas.reserve(1);
+  def_metas.reserve(100);
 
-  PerformanceProfiler::start("DataUpdate additional (1 record)");
-  for (int i = 0; i < 1; i++) {
+  PerformanceProfiler::start("DataUpdate additional (100 records)");
+  for (int i = 0; i < 100; i++) {
     client.DataUpdate(meta, Poseidon_add, "def", "file-" + std::to_string(i));
+    total_meta_size += getMetadataSize(meta);
     def_metas.push_back(meta);
   }
-  PerformanceProfiler::end("DataUpdate additional (1 record)");
+  PerformanceProfiler::end("DataUpdate additional (100 records)");
 
   PerformanceProfiler::start("Server::SaveBatch (additional)");
   server.SaveBatch(def_metas);
   PerformanceProfiler::end("Server::SaveBatch (additional)");
+
+  // KeyUpdate phase
+  std::string delta;
+  PerformanceProfiler::start("Client::KeyUpdate");
+  client.KeyUpdate(delta);
+  PerformanceProfiler::end("Client::KeyUpdate");
+
+  PerformanceProfiler::start("Server::KeyUpdate");
+  server.KeyUpdate(delta);
+  PerformanceProfiler::end("Server::KeyUpdate");
 
   // Search phase
   PerformanceProfiler::start("Client::Trapdoor");
@@ -137,7 +156,13 @@ int main() {
 
   // Print results
   std::cout << "\nSearch found " << plain_out.size() << " records" << std::endl;
-
+  std::cout << "Total Metadata Size: " << total_meta_size << " bytes ("
+            << std::fixed << std::setprecision(2)
+            << (double)total_meta_size / 1024.0 << " KB)" << std::endl;
+  std::cout << "Average Metadata Size: " << std::fixed << std::setprecision(2)
+            << (double)total_meta_size / 300 << " bytes ("
+            << (double)total_meta_size / 300 / 1024.0 << " KB)"
+            << std::endl;
   PerformanceProfiler::printResults();
 
   core_clean();
