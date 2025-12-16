@@ -2,6 +2,7 @@
 #define PoseidonCLIENT_H
 
 #include <gmpxx.h>
+#include <memory>
 #include <string>
 #include <vector>
 

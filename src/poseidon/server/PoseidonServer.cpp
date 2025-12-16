@@ -72,18 +72,18 @@ void PoseidonServer::Setup() { _storage->Clear(); }
 
 void PoseidonServer::Save(const Metadata &meta) {
   EDBCell cell = {
+      .xCell =
+          {
+              .L = meta.L,
+              .D = meta.D,
+              .C = meta.C,
+          },
       .tCell =
           {
               .addr = meta.addr,
               .val = meta.val,
               .lastAddr = meta.lastAddr,
               .alpha = meta.alpha,
-          },
-      .xCell =
-          {
-              .L = meta.L,
-              .D = meta.D,
-              .C = meta.C,
           },
   };
 
@@ -172,7 +172,7 @@ void PoseidonServer::Search(std::vector<ResMetadata> &result,
   string val, lastAddr, alpha;
 
   int cnt;
-  int n = td.TKL.size() + 1;
+  int n = td.TKL.size();
   while (_storage->GetT(cellT)) {
     val = cellT.val;
     lastAddr = cellT.lastAddr;

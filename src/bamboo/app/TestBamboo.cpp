@@ -50,7 +50,8 @@ public:
                 << std::setw(10) << counts[name] << std::setw(15) << std::fixed
                 << std::setprecision(2) << avg << std::setw(11)
                 << std::setprecision(2)
-                << (total > 0 ? (time / total * 100) : 0) << "%" << "\n";
+                << (total > 0 ? (time / total * 100) : 0) << "%"
+                << "\n";
     }
     std::cout << std::string(92, '-') << "\n";
     std::cout << std::left << std::setw(40) << "TOTAL" << std::right

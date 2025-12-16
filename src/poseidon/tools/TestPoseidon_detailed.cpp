@@ -161,8 +161,7 @@ int main() {
             << (double)total_meta_size / 1024.0 << " KB)" << std::endl;
   std::cout << "Average Metadata Size: " << std::fixed << std::setprecision(2)
             << (double)total_meta_size / 300 << " bytes ("
-            << (double)total_meta_size / 300 / 1024.0 << " KB)"
-            << std::endl;
+            << (double)total_meta_size / 300 / 1024.0 << " KB)" << std::endl;
   PerformanceProfiler::printResults();
 
   core_clean();

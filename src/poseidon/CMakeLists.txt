@@ -62,19 +62,10 @@ target_link_libraries(Poseidon-SERVER
 )
 
 add_executable(Poseidon-TEST
-    tools/TestPoseidon.cpp
-)
-
-target_link_libraries(Poseidon-TEST
-    poseidon_client
-    poseidon_server
-)
-
-add_executable(Poseidon-TEST-DETAILED
     tools/TestPoseidon_detailed.cpp
 )
 
-target_link_libraries(Poseidon-TEST-DETAILED
+target_link_libraries(Poseidon-TEST
     poseidon_client
     poseidon_server
 )

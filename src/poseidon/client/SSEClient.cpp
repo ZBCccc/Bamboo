@@ -146,7 +146,7 @@ void SSEClient::Search(std::vector<std::string> &result,
   elapsed = end - begin;
   bench_clnt_time = elapsed.count();
   std::cout << "Trapdoor generated in " << bench_clnt_time << " microseconds."
-       << std::endl;
+            << std::endl;
 
   sock = _ConnectToServer();
   send(sock, &net_op, sizeof(int), 0);

@@ -22,7 +22,7 @@ int main() {
   std::vector<Metadata> metas;
   Metadata meta;
   metas.reserve(2);
-  
+
   begin = std::chrono::steady_clock::now();
   for (int i = 0; i < 2; i++) {
     client.DataUpdate(meta, Poseidon_add, "abc", "file-" + std::to_string(i));
@@ -77,8 +77,8 @@ int main() {
 
   auto bench_clnt_time = elapsed1.count() + elapsed3.count();
   auto total_time = bench_clnt_time + elapsed2.count();
-  std::cout << "Searching with Poseidon for keyword: " << "abc and def"
-            << std::endl;
+  std::cout << "Searching with Poseidon for keyword: "
+            << "abc and def" << std::endl;
   std::cout << "\tTotally find " << plain_out.size()
             << " records and the last file ID is "
             << plain_out[plain_out.size() - 1] << std::endl;
